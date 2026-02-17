@@ -35,7 +35,8 @@ parseLine s = traverseList parseWord $ words s
         parseWord w     = IConst <$> readMaybe w
 
 traverseList :: Applicative m => (a -> m b) -> [a] -> m [b]
-traverseList ... =
-    -- A completar per l'estudiant
-    ...
+traverseList _ [] =
+    pure []
+traverseList f (x : xs) =
+    (:) <$> f x <*> traverseList f xs
 
