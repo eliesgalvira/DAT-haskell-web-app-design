@@ -18,8 +18,10 @@ compila (EApp name args) = do
         Nothing -> Left $ "Undefined operator: " <> name
     if np == length args then pure ()
                          else Left $ "Expected "<>show np<>" arguments"
-    -- compila els arguments, obtenint les corresponents instruccions,
-    -- i afegeix la instrucció 'i' al final
+    -- En una maquina de pila, primer hem de deixar tots els arguments
+    -- a la pila i nomes despres executar l'operacio.
+    -- Per aixo compilem recursivament cada argument, concatenem el codi
+    -- generat i finalment afegim la instruccio de l'operador al final.
     instrs <- traverse compila args
     pure $ concat instrs <> [i]
 
@@ -27,6 +29,9 @@ compila (EApp name args) = do
 -- o obté 'Just (np, i)' si correspon a la instrucció 'i' amb 'np' arguments.
 getOp :: String -> Maybe (Int, Instr)
 getOp name =
+    -- 'Maybe' amb '<|>' ens permet provar diverses taules de noms.
+    -- Si el nom correspon a una operacio binaria retornem aritat 2;
+    -- si no, intentem interpretar-lo com una operacio unaria.
     ((2,) . IBinOp <$> binOps name) <|> ((1,) . IUnOp <$> unOps name)
 
 binOps :: String -> Maybe BinOp

@@ -13,6 +13,10 @@ data Expr = ELit Int
 
 exprP :: Analitzador Expr
 exprP =
+    -- La gramatica diu que una expressio pot ser:
+    -- 1) un identificador seguit d'un o mes atoms  -> aplicacio
+    -- 2) un atom sol                                -> literal o parentesis
+    -- Provem primer el cas d'aplicacio, que es el mes específic.
     (EApp <$> ident <*> some atomP) <|> atomP
 
 atomP :: Analitzador Expr
@@ -48,6 +52,8 @@ eliminaEspais p = p <* espaisEnBlanc
 -- Multiples espais o comentaris
 espaisEnBlanc :: Analitzador ()
 espaisEnBlanc =
+    -- Aquest parser no construeix cap valor util: nomes "neteja" l'entrada.
+    -- Va consumint tants blocs d'espais o comentaris com trobi seguits.
     many (espais <|> comentari) *> pure ()
   where
     espais = some (complirA isSpace) *> pure ()

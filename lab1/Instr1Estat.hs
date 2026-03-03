@@ -24,6 +24,8 @@ newtype ICodeM a = ICodeM { runICodeM :: Stack -> (a, Stack) }
 instance Functor ICodeM where
     -- fmap :: (a -> b) -> ICodeM a -> ICodeM b
     fmap g mx = ICodeM $ \xs ->
+        -- Un calcul d'ICodeM produeix dues coses: un valor i una pila nova.
+        -- 'fmap' nomes transforma el valor produït; la pila resultant no es toca.
         let (x, xs') = runICodeM mx xs
         in (g x, xs')
 
@@ -39,6 +41,9 @@ instance Applicative ICodeM where
 instance Monad ICodeM where
     -- (>>=) :: ICodeM a -> (a -> ICodeM b) -> ICodeM b
     mx >>= k = ICodeM $ \xs ->
+        -- Primer executem el calcul inicial sobre la pila d'entrada.
+        -- Despres, el calcul següent rep el valor obtingut i continua
+        -- a partir de la pila actualitzada pel primer calcul.
         let (x, xs') = runICodeM mx xs
         in runICodeM (k x) xs'
 
@@ -52,6 +57,9 @@ runInstr1 (IUnOp op) = do
     x <- pop
     push $ doUnOp op x
 runInstr1 (IBinOp op) = do
+    -- La pila guarda l'ultim valor calculat al capdamunt.
+    -- Per a una operacio binaria, el primer 'pop' dona l'operand dret
+    -- i el segon 'pop' dona l'operand esquerre.
     x2 <- pop
     x1 <- pop
     push $ doBinOp op x1 x2

@@ -43,6 +43,9 @@ instance Applicative Analitzador where
     pure x = Analitzador $ \input -> Just (x, input)
     Analitzador pf <*> Analitzador px =
         Analitzador $ \input -> do
+            -- Primer s'analitza una funcio a partir de l'entrada actual.
+            -- Si te exit, el segon parser continua exactament sobre el text
+            -- que ha quedat pendent, i al final apliquem la funcio al resultat.
             (f, rest) <- pf input
             (x, rest') <- px rest
             pure (f x, rest')
@@ -51,10 +54,14 @@ instance Alternative Analitzador where
     empty = Analitzador $ const Nothing
     Analitzador p1 <|> Analitzador p2 =
         Analitzador $ \input ->
+            -- Les alternatives representen "prova aquest parser; si falla,
+            -- torna a provar des del mateix punt amb l'altre parser".
             case p1 input of
                 Just r -> Just r
                 Nothing -> p2 input
 
 cadenaA :: String -> Analitzador String
 cadenaA [] = pure []
+-- Per reconeixer una cadena concreta, exigim que cada caracter coincideixi
+-- exactament amb el prefix de l'entrada i anem avançant recursivament.
 cadenaA (c : cs) = (:) <$> caracterA c <*> cadenaA cs
