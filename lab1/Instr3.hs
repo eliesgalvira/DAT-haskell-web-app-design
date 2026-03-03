@@ -16,13 +16,26 @@ data Instr = IConst Int
 
 runIProgram :: IProgram -> Either String Int
 runIProgram is =
-    error "runIProgram: A completar per l'estudiant"
+    do
+        xs <- runInstrs is []
+        runTop xs
 
 type Stack = [Int]
 
-{- A completar per l'estudiant:
-    runTop :: Stack -> Either String Int
-    runInstrs :: IProgram -> Stack -> Either String Stack
-    runInstr1 :: Instr -> Stack -> Either String Stack
--}
+runTop :: Stack -> Either String Int
+runTop [x] = Right x
+runTop _ = Left "Stack does not contain exactly one value"
 
+runInstrs :: IProgram -> Stack -> Either String Stack
+runInstrs is xs =
+    foldlM (flip runInstr1) xs is
+
+runInstr1 :: Instr -> Stack -> Either String Stack
+runInstr1 (IConst x) xs =
+    Right $ x : xs
+runInstr1 (IUnOp op) (x1 : xs) =
+    Right $ doUnOp op x1 : xs
+runInstr1 (IBinOp op) (x2 : x1 : xs) =
+    Right $ doBinOp op x1 x2 : xs
+runInstr1 _ _ =
+    Left "Stack underflow"

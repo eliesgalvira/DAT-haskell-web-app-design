@@ -20,14 +20,14 @@ compila (EApp name args) = do
                          else Left $ "Expected "<>show np<>" arguments"
     -- compila els arguments, obtenint les corresponents instruccions,
     -- i afegeix la instrucció 'i' al final
-    error "compila: A completar per l'estudiant"
+    instrs <- traverse compila args
+    pure $ concat instrs <> [i]
 
 -- 'getOp name' obté 'Nothing' si 'name' no és una de les operacions definides ("add", "sub", ...),
 -- o obté 'Just (np, i)' si correspon a la instrucció 'i' amb 'np' arguments.
 getOp :: String -> Maybe (Int, Instr)
-getOp name = error "getOp: A completar per l'estudiant"
-    -- usant el fet que Maybe es instancia d'Alternative
-    -- (useu binOps, unOps, fmap i (<|>))
+getOp name =
+    ((2,) . IBinOp <$> binOps name) <|> ((1,) . IUnOp <$> unOps name)
 
 binOps :: String -> Maybe BinOp
 binOps "add" = Just Add
@@ -40,4 +40,3 @@ binOps _     = Nothing
 unOps :: String -> Maybe UnOp
 unOps "neg" = Just Neg
 unOps _     = Nothing
-

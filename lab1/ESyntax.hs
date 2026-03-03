@@ -12,10 +12,12 @@ data Expr = ELit Int
     deriving Show
 
 exprP :: Analitzador Expr
-exprP = error "exprP: A completar per l'estudiant"
+exprP =
+    (EApp <$> ident <*> some atomP) <|> atomP
 
 atomP :: Analitzador Expr
-atomP = error "atomP: A completar per l'estudiant"
+atomP =
+    (ELit <$> numero) <|> parens exprP
 
 --------------------------------------------------
 
@@ -23,12 +25,10 @@ atomP = error "atomP: A completar per l'estudiant"
 -- que pugui haver-hi despres del text analitzat.
 
 numero :: Analitzador Int
-numero = error "numero: A completar per l'estudiant"
-    -- usant eliminaEspais i enterPosA
+numero = eliminaEspais enterPosA
 
 simbol :: String -> Analitzador String
-simbol = error "simbol: A completar per l'estudiant"
-    -- usant eliminaEspais i cadenaA
+simbol = eliminaEspais . cadenaA
 
 ident :: Analitzador String
 ident =
@@ -37,19 +37,21 @@ ident =
 
 
 parens :: Analitzador a -> Analitzador a
-parens p = error "parens: A completar per l'estudiant"
+parens p = simbol "(" *> p <* simbol ")"
 
 
 -- Aplica l'analitzador indicat i elimina l'espai en blanc
 -- que pugui haver-hi despres del text analitzat.
 eliminaEspais :: Analitzador a -> Analitzador a
-eliminaEspais p = error "eliminaEspais: A completar per l'estudiant"
+eliminaEspais p = p <* espaisEnBlanc
 
 -- Multiples espais o comentaris
 espaisEnBlanc :: Analitzador ()
-espaisEnBlanc = error "espaisEnBlanc: A completar per l'estudiant"
+espaisEnBlanc =
+    many (espais <|> comentari) *> pure ()
+  where
+    espais = some (complirA isSpace) *> pure ()
 
 comentari :: Analitzador ()
 comentari =
     cadenaA "--" *> many (complirA (/= '\n')) *> complirA (=='\n') *> pure ()
-

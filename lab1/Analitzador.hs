@@ -35,20 +35,26 @@ fiTextA = Analitzador f
     f _  = Nothing
 
 instance Functor Analitzador where
-    -- A completar per l'estudiant
-    -- fmap :: (a -> b) -> Analitzador a -> Analitzador b
+    fmap g (Analitzador p) =
+        Analitzador $ \input ->
+            (\(x, rest) -> (g x, rest)) <$> p input
 
 instance Applicative Analitzador where
-    -- A completar per l'estudiant
-    -- pure :: a -> Analitzador a
-    -- (<*>) :: Analitzador (a -> b) -> Analitzador a -> Analitzador b
-    (<*>) = error "(<*>): A completar per l'estudiant"
+    pure x = Analitzador $ \input -> Just (x, input)
+    Analitzador pf <*> Analitzador px =
+        Analitzador $ \input -> do
+            (f, rest) <- pf input
+            (x, rest') <- px rest
+            pure (f x, rest')
 
 instance Alternative Analitzador where
-    -- A completar per l'estudiant
-    -- empty :: Analitzador a
-    -- (<|>) :: Analitzador a -> Analitzador a -> Analitzador a
+    empty = Analitzador $ const Nothing
+    Analitzador p1 <|> Analitzador p2 =
+        Analitzador $ \input ->
+            case p1 input of
+                Just r -> Just r
+                Nothing -> p2 input
 
 cadenaA :: String -> Analitzador String
-cadenaA = error "cadenaA: A completar per l'estudiant"
-
+cadenaA [] = pure []
+cadenaA (c : cs) = (:) <$> caracterA c <*> cadenaA cs
