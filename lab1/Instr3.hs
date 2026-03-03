@@ -24,7 +24,7 @@ type Stack = [Int]
 
 runTop :: Stack -> Either String Int
 runTop [x] = Right x
-runTop _ = Left "Stack does not contain exactly one value"
+runTop _ = Left "La pila no conté exactament un valor"
 
 runInstrs :: IProgram -> Stack -> Either String Stack
 runInstrs is xs =
@@ -38,4 +38,4 @@ runInstr1 (IUnOp op) (x1 : xs) =
 runInstr1 (IBinOp op) (x2 : x1 : xs) =
     Right $ doBinOp op x1 x2 : xs
 runInstr1 _ _ =
-    Left "Stack underflow"
+    Left "No hi ha prou elements a la pila"
