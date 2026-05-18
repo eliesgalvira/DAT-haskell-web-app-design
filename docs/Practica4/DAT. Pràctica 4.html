@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://soft0.upc.edu/dat/prac-forums/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 4_files/bootstrap.4.1.3.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 4_files/style-4.css">
+
+  <title>DAT. Pràctica 4</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/index.html">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-maq-expr/index.html">Pràctica 1</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Pràctica 5</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+  <nav class="nav sticky-top navbar-light bg-light nav-pills flex-column">
+    <a class="nav-link active" href="http://soft0.upc.edu/dat/prac-forums/index.html">Introducció</a>
+    <!--a class="nav-link">Exemples</a>
+    <nav class="nav pl-2">
+      <a class="nav-link" href="exemples/index.html"><em>Hello World</em></a>
+      <a class="nav-link" href="exemples/tasks.html"><em>Tasks</em></a>
+    </nav-->
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html">Realització</a>
+  </nav>
+</div>
+
+<div class="col-md-2 order-last">
+  <nav class="nav sticky-top navbar-light bg-light flex-column">
+      <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html#objectius">Objectius</a>
+      <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html#funcionalitat">Funcionalitat</a>
+      <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html#datfw">Us del <em>framework</em></a>
+      <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html#forums-dat">Fòrums de DAT</a>
+  </nav>
+</div>
+
+<main class="col-md-8">
+
+<h1>Pràctica 4: Aplicació WEB clàssica. Realització d'un simple forum</h1>
+
+<!-- ------------------------------------------------ -->
+<div class="alert alert-info" role="alert">
+
+<p><b>IMPORTANT</b>: Per realitzar aquesta pràctica cal que prèviament:</p>
+<ol>
+  <li><p> us baixeu l’arxiu <a href="http://soft0.upc.edu/dat/prac-forums/forums-app.zip">forums-app.zip</a>
+  i el descomprimiu en el directori del vostre projecte de pràctiques, per exemple:</p><p>
+  </p><pre class="bg-light"><samp>~$ </samp><kbd>cd dat-prj</kbd>
+<samp>~/dat-prj$ </samp><kbd>curl http://soft0.upc.edu/dat/prac-forums/forums-app.zip &gt; forums-app.zip</kbd>
+<samp>~/dat-prj$ </samp><kbd>unzip forums-app.zip</kbd>
+<samp>~/dat-prj$ </samp><kbd>rm forums-app.zip</kbd>
+</pre></li>
+  <li><p>editeu el <a href="http://soft0.upc.edu/dat/dat-prj/stack.yaml">fitxer de configuració del projecte (<code>stack.yaml</code>)</a>
+   afegint a la secció <code>packages</code> el paquet del directori <code>forums-app</code>.</p></li>
+  <!--li><p>reconstruiu el projecte i us moveu al directori d'aquesta pràctica:</p>
+  <pre class="bg-light">
+<samp>~/dat-prj$ </samp><kbd>cd wai-intro</kbd>
+<samp>~/dat-prj/wai-intro$ </samp><kbd>stack build</kbd>
+</pre></li-->
+</ol>
+</div>
+
+<p>El codi font d'aquesta pràctica es troba en el directori
+<a href="http://soft0.upc.edu/dat/dat-prj/forums-app/">dat-prj/forums-app</a>.</p>
+
+<hr width="100%">
+
+<h2 id="objectius">Objectius</h2>
+
+<p>L'objectiu d'aquesta pràctica és el de realitzar una aplicació WEB clàsica (en el costat servidor)
+usant un <em>framework</em> que facilita el desenvolupament d'aquest tipus d'aplicacions.
+<!--en la que es puguin aplicar els coneixements adquirits durant el curs.-->
+</p>
+
+<p>En aquest treball es tractaran els següents aspectes:</p>
+<ul>
+ <li>disseny basat en una arquitectura Model-View-Controller (MVC).</li>
+ <li>reutilització de classes i patrons proporcionats per un framework
+     (<a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/">DatFw</a>).</li>
+ <li>manteniment de l'estat de les sessions amb els clients.</li>
+ <li>autentificació d'usuaris i funcionalitat depenent de l'usuari.</li>
+ <li>accés a bases de dades per al manteniment persistent de la informació.</li>
+     <!--Us de patrons de disseny adeqüats (DAO, ...).-->
+ <li>generació dinàmica del HTML. Definició dels components de visualització amb
+     el llenguatge de <a href="http://soft0.upc.edu/datfw/0.1.4/templates.html">plantilles de DatFw</a>.</li>
+</ul>
+
+<p>El treball consistirà en la realització d'una aplicació WEB interactiva
+que permeti la creació de diferents temes de discussió (<em>forums</em>),
+i la creació de qüestions (<em>topics</em>) i respostes en els diferents <em>forums</em>,
+pels usuaris registrats.</p>
+
+<!--p>Per realitzar aquesta pràctica cal que us baixeu l’<a href="forums.zip">arxiu de projecte <code>forums.zip</code></a>
+ i el descomprimiu en la vostra zona d’usuari de la màquina <code>entelsoft0.upc.edu</code>.</p-->
+
+
+<h2 id="funcionalitat">Funcionalitat de l'aplicació</h2>
+
+<p>L'aplicació a realitzar ha de permetre als usuaris les següents funcionalitats:
+</p><ol>
+<li>Consultar la llista de fòrums creats sobre els que es poden fer qüestions i respostes.<br>
+  Cada fòrum ha de tenir els següets atributs:
+  <ol>
+  <li>el títol (text d'una sola línia),</li>
+  <li>l'usuari que ha creat el fòrum (moderador del fòrum),</li>
+  <li>la descripció del fòrum (text de múltiples línies amb sintaxis <a href="https://commonmark.org/" target="help"><em>markdown</em></a>),</li>
+  <li>i la data de creació del fòrum.</li>
+  </ol>
+</li>
+<li> Veure les qüestions (<em>topics</em>) i respostes (<em>posts</em>) realitzades en un fòrum determinat. Cada qüestió pot tenir
+  vàries respostes associades.<br>
+  Cada qüestió o <em>topic</em> ha de tenir els següets atributs:
+  <ol>
+  <li>l'usuari que ha fet la qüestió,</li>
+  <li>la data (dia i hora) en que s'ha fet la qüestió,</li>
+  <li>l'assumpte de la qüestió (text d'una sola línia)</li>
+  <li>i el contingut de la qüestió (text <a href="https://commonmark.org/" target="help"><em>markdown</em></a> de múltiples línies).</li>
+  </ol>
+  Cada resposta o <em>post</em> ha de tenir els següents atributs:
+  <ol>
+  <li>l'usuari que ha fet la resposta,</li>
+  <li>la data (dia i hora) en que s'ha fet la resposta</li>
+  <li>i el contingut de la resposta (text <a href="https://commonmark.org/" target="help"><em>markdown</em></a> de múltiples línies).</li>
+  </ol>
+</li>
+<li>Si l'usuari és un usuari registrat i s'ha autentificat, afegir nous fòrums.<br>
+  En aquest cas, s'ha d'obrir un formulari que permeti introduir el títol i la descripció.</li>
+<li> Si l'usuari s'ha autentificat, afegir noves qüestions a un determinat fòrum.<br>
+  En aquest cas, s'ha d'obrir un formulari que permeti introduir l'assumpte i el contingut de la qüestió.</li>
+<li> Si l'usuari s'ha autentificat, afegir noves respostes a una determinada qüestió.<br>
+  En aquest cas, s'ha d'obrir un formulari que permeti introduir el contingut de la resposta.</li>
+<li>Si l'usuari s'ha autentificat i és el moderador d'un determinat fòrum (el que l'ha creat),
+  modificar el fòrum.<br>
+  En aquest cas, s'ha d'obrir un formulari que permeti editar el nou títol
+  i/o la nova descripció.<br>
+  El moderador d'un fòrum també ha de poder eliminar les qüestions o respostes que cregui que són inadeqüades per al fòrum.
+  Si elimina una qüestió, automàticament quedaràn eliminades totes les seves respostes.</li>
+<!--li> <div class="alert alert-warning">Si l'usuari s'ha autentificat, canviar el seu <em>password</em>.<br/>
+  En aquest cas, s'ha d'obrir un formulari que permeti introduir el <em>password</em> actual, el nou <em>password</em>
+  i una confirmació del nou <em>password</em>.<br/>
+  <b>IMPORTANT</b>: Es posarà especial ènfasi en aquesta part durant l'avaluació.</div></li-->
+</ol>
+<p></p>
+
+<!--p>La autentificació de l'usuari es realitza amb un subsistema apart, de manera que un cop
+l'usuari s'hagi autentificat en el portal es mantindrà l'identificador de l'usuari durant tota
+la sessió.</p-->
+
+
+<p>La funcionalitat que haurà de tenir la vostrà aplicació haurà de ser molt similar
+a la que ofereix el <a href="http://soft0.upc.edu/dat/prac-forums/index.html#forums-dat">fòrum de DAT</a>.</p>
+
+<div class="alert alert-info" role="alert"> La funcionalitat descrita en aquest document s'ha de considerar com
+la funcionalitat <em>mínima</em> de l'aplicació. Opcionalment, podeu afegir noves funcionalitats
+o millores sobre les descrites.</div>
+
+
+<h2 id="datfw">Us del <em>framework</em></h2>
+
+<p>Aquesta pràctica usa el <em>framework</em> per al desenvolupament d'aplicacions WEB
+ <a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/"><b>DatFw</b></a>
+ <!--a href="/datfw/0.1.4/"><b>DatFw (versió 0.1.4)</b></a-->.</p>
+
+<p><b>DatFw</b> és un <em>framework</em> per al desenvolupament d'aplicacions WEB en el costat servidor,
+plantejat inicialment amb objectius docents.
+Podeu consultar la <a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/">documentació de l'API de <em>DatFw</em></a>.</p>
+
+<!--
+<p>És aconsellable, abans d'entrar amb l'aplicació de fòrums, veure algún exemple senzill que ens introdueixi en la utilització del <em>framework</em>.
+En la següent secció es mostren 2 exemples amb els que s'introdueix  la programació d'aplicacions usant <b>DatFw</b>:</p>
+<ul>
+  <li><a href="exemples/index.html"><em>Hello World</em></a></li>
+  <li><a href="exemples/tasks.html">Llista de tasques</a></li>
+</ul>
+-->
+
+
+<h2 id="forums-dat">Fòrums de DAT</h2>
+
+<!--img src="../en-construccion-y-obra-imagen-animada-0016.gif"-->
+<p>Hi ha en funcionament una aplicació de fòrums amb diversos temes creats relacionats amb l'assignatura de DAT.
+La funcionalitat que haurà de tenir la vostrà aplicació haurà de ser molt similar a l'oferida per aquesta aplicació.</p>
+
+<p>Podeu accedir aquesta aplicació amb la URI:</p>
+<ul>
+  <li>Accessible a través de la VPN de la UPC <!--o des de la vostra màquina virtual de RAVADA-->:
+   <a href="http://soft0.upc.edu:5000/">http://soft0.upc.edu:5000/</a></li>
+</ul>
+
+<!--p>En aquesta aplicació hi ha registrats cadascún dels estudiants de l'assignatura de DAT, permentent
+que pogueu plantejar preguntes i respostes sobre els temes creats
+(en aquesta implementació no es poden crear temes nous).</p-->
+<p>En aquesta aplicació hi ha registrats 3 usuaris de prova (<code>usuari1</code>, <code>usuari2</code> i <code>usuari3</code>)
+amb password <code>1234</code>,
+per a que pogueu plantejar preguntes i respostes sobre els temes creats. També podreu crear temes nous.</p>
+
+<p>(Si us plau, no canvieu el password d'aquests usuaris de prova)</p>
+
+
+</main><!-- .col-md-10 -->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga, Abril 2026</span>
+  </div>
+</footer>
+
+<!-- Optional JavaScript -->
+<!--script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script-->
+
+
+
+</body></html>

@@ -1,0 +1,46 @@
+cabal-version: 1.12
+
+name:           forums-app
+version:        0.0.0.1
+author:         Jordi Forga Alberich
+build-type:     Simple
+
+tested-with:
+    GHC == 9.2.8
+    GHC == 9.6.7
+    GHC == 9.10.3
+
+executable forums-app
+  main-is: Main.hs
+  other-modules:
+      Forums.App
+      Forums.Config
+      Forums.Found
+      Forums.Handler
+      Forums.Model
+      Forums.View
+      Paths_forums_app
+      Db
+  hs-source-dirs:
+      src
+  build-depends:
+    aeson
+    , base >=4.9 && <5
+    , blaze-markup
+    , bytestring
+    , cmark
+    , containers
+    , cryptonite
+    , datfw-core >=0.2 && <0.3
+    , directory
+    , http-types
+    , mtl
+    , sqlite-simple
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , wai >=3.0
+    , warp
+  default-language: Haskell2010
+
