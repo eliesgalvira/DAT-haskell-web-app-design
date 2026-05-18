@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://soft0.upc.edu/dat/prac-intro-web/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 3_files/bootstrap.4.1.3.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 3_files/style-4.css">
+
+  <title>DAT. Pràctica 3</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/index.html">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2 order-last">
+<nav class="nav sticky-top navbar-light bg-light">
+  <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html#wai">Web Application Interface</a></li>
+  <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html#handler">Realització d'un monad <em>Handler</em></a></li>
+  <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html#trans">Realització del <em>Handler</em> amb
+   transformadors de <em>monads</em></a></li>
+  <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html#joc">Realització d'un cas d'ús del monad <em>Handler</em></a></li>
+</nav>
+</div>
+
+<main class="col-md-10">
+
+<h1>DAT. Pràctica 3</h1>
+
+<!-- ------------------------------------------------ -->
+<div class="alert alert-info" role="alert">
+
+<p><b>IMPORTANT</b>: Per realitzar aquesta pràctica cal que prèviament:</p>
+<ol>
+  <li><p> us baixeu l’arxiu <a href="http://soft0.upc.edu/dat/prac-intro-web/prac-intro-web.zip">prac-intro-web.zip</a>
+  i el descomprimiu en el directori del vostre projecte de pràctiques, per exemple:</p><p>
+  </p><pre class="bg-light"><samp>~$ </samp><kbd>cd dat-prj</kbd>
+<samp>~/dat-prj$ </samp><kbd>curl http://soft0.upc.edu/dat/prac-intro-web/prac-intro-web.zip &gt; prac-intro-web.zip</kbd>
+<samp>~/dat-prj$ </samp><kbd>unzip prac-intro-web.zip</kbd>
+<samp>~/dat-prj$ </samp><kbd>rm prac-intro-web.zip</kbd>
+</pre></li>
+  <li><p>editeu el <a href="http://soft0.upc.edu/dat/dat-prj/stack.yaml">fitxer de configuració del projecte (<code>stack.yaml</code>)</a>
+   afegint a la secció <code>packages</code> el paquet del directori <code>web-handler</code>.</p></li>
+  <!--li><p>reconstruiu el projecte i us moveu al directori d'aquesta pràctica:</p>
+  <pre class="bg-light">
+<samp>~/dat-prj$ </samp><kbd>cd wai-intro</kbd>
+<samp>~/dat-prj/wai-intro$ </samp><kbd>stack build</kbd>
+</pre></li-->
+</ol>
+</div>
+
+<p>El codi font d'aquesta pràctica es troba en els directoris
+<a href="http://soft0.upc.edu/dat/dat-prj/wai-intro/">dat-prj/wai-intro</a> i
+<a href="http://soft0.upc.edu/dat/dat-prj/web-handler/">dat-prj/web-handler</a>.</p>
+
+
+<!-- ================================================ -->
+<hr width="100%">
+<h2 id="wai">Web Application Interface</h2>
+
+<p>En <em>Haskell</em> es disposa d'un API bàsic per a la programació d'aplicacions WEB
+que és independent del servidor.
+    Aquest API s'anomena <a href="http://hackage.haskell.org/package/wai"><em>Web Application Interface (WAI)</em></a>
+    i serà el suport per a frameworks més elaborats que facilitin el desenvolupament d'aplicacions complexes.</p>
+
+<p>Podeu llegir una <a href="https://www.yesodweb.com/book/web-application-interface">introducció al WAI</a>
+    on es descriu l'objectiu d'aquesta API i alguns senzills casos d'us.</p>
+
+<p>Exemples d'us del <em>Web Application Interface (WAI)</em>:</p>
+<ul>
+  <li><a href="http://soft0.upc.edu/dat/dat-prj/wai-intro/holamon.hs">wai-intro/holamon.hs</a>: primer exemple.</li>
+  <li><a href="http://soft0.upc.edu/dat/dat-prj/wai-intro/acumulador0.hs">wai-intro/acumulador0.hs</a>: simple aplicació que
+  manté una variable global de tipus enter. Es mostra un formulari que
+  permet sumar una qüantitat.</li>
+  <li><a href="http://soft0.upc.edu/dat/dat-prj/wai-intro/acumulador.hs">wai-intro/acumulador.hs</a>: mateixa aplicació però
+  usant un paquet de generació d'HTML.</li>
+  <li><p><a href="http://soft0.upc.edu/dat/dat-prj/wai-intro/hello-1.hs">wai-intro/hello-1.hs</a>: simple aplicació en que es
+   mostra un formulari a l'usuari per introduir el seu nom, i guarda durant la sessió (a través d'una <em>cookie</em>)
+   el nom i el mostra en les successives interaccions.
+   <!--Podeu <a href="hello-1.cgi">provar l'exemple</a>.--></p>
+
+    <p>Aquest exemple a més usa també un paquet de generació d'HTML.</p>
+  </li>
+</ul>
+
+<p>Per executar un d'aquests exemples caldrà que feu:</p>
+<pre class="bg-light"><samp>~/dat-prj$ </samp><kbd>stack runghc wai-intro/nomxFitxer.hs</kbd>
+</pre>
+<p>on <code>nomFitxer.hs</code> és el nom del fitxer corresponent al mòdul <code>Main</code> de l'aplicació.</p>
+
+
+<!-- ================================================ -->
+<hr width="100%">
+<h2 id="handler">Realització d'un monad <em>Handler</em></h2>
+
+<p>L'objectiu d'aquest apartat és
+la realització d'un monad (que anomenarem <em>Handler</em>) que faciliti la programació d'aplicacions WEB.</p>
+
+<p>Un exemple d'us d'aquest monad el teniu en una segona versió de l'aplicació <em>hello</em> anterior
+(<a href="http://soft0.upc.edu/dat/dat-prj/web-handler/hello-2.hs">web-handler/hello-2.hs</a>).</p>
+
+<h4>Codi a completar</h4>
+
+<p>El codi de l'aplicació (servidor WEB) es troba en el directori <code>web-handler</code> del projecte
+i conté el paquet <code>web-handler</code> amb els següents mòduls <em>Haskell</em>:</p>
+<dl>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/web-handler/hello-2.hs">Main</a></dt>
+  <dd>És pròpiament l'aplicació. Conté el punt d'entrada del servidor, el codi corresponent al processat
+   de les peticions i la generació d'HTML.
+  (Observació: <em>El fitxer <code>hello-2.hs</code> conté el mòdul <code>Main</code> i
+   és l'únic en que el nom del fitxer i del mòdul poden ser diferents</em>).</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/web-handler/Handler.hs">Handler</a></dt>
+  <dd>Defineix un <em>monad</em> <code>Handler</code>, usat pel mòdul
+  anterior, que simplifica l'aplicació.
+  <b>Es l'unic mòdul que s'ha de completar</b>.</dd>
+</dl>
+
+<p>A més s'usen altres paquets preinstal.lats de la plataforma <em>Haskell</em>.
+ Alguns dels paquets usats en aquesta aplicació, específics per a la programació de la WEB, són:</p>
+<dl>
+<dt><a href="http://hackage.haskell.org/package/blaze-html">blaze-html</a></dt>
+  <dd>Defineix tipus, funcions i operadors per a la la generació d'<code>HTML</code>.</dd>
+<dt><a href="http://hackage.haskell.org/package/wai">wai</a></dt>
+  <dd>Definició del <code>WAI</code>. Defineix tipus i funcions per al processat de peticions i contrucció de respostes HTTP.</dd>
+</dl>
+
+<p>La documentació de tots els paquets la podeu trobar en <a href="https://hackage.haskell.org/">https://hackage.haskell.org/</a>,
+que és la base de dades centralitzada dels paquets disponibles de <em>Haskell</em> de codi obert.
+També podeu usar el <b>buscador de funcions <a href="https://hoogle.haskell.org/">https://hoogle.haskell.org/</a> (molt útil !)</b>.</p>
+
+<p>Per completar el mòdul <code>Handler.hs</code> caldrà aplicar els coneixements adquirits a classe de teoria.
+Observeu que els efectes del monad <code>Handler</code> consistiran en una combinació dels efectes d'un monad <code>Reader</code>
+i d'un monad <code>State</code>, amb la diferència de que
+l'execució del monad consistirà en executar una accio <code>IO</code>. Observeu la definició del tipus <code>Handler</code>:</p>
+<pre class="bg-light">newtype Handler a = HandlerC (Request -&gt; HandlerState -&gt; IO (a, HandlerState))
+</pre>
+
+<p>Per facilitar el codi que s'ha de completar es donen ja fetes les definicions d'algunes funcions.
+Caldrà doncs entendre el codi ja donat en aquest mòdul i que servirà de guia per a la vostra solució.</p>
+
+
+<!-- ================================================ -->
+<hr width="100%">
+<h2 id="trans">Realització del <em>Handler</em> amb <em>monad transformers</em></h2>
+
+<p>Observeu com el tipus <code>Handler a</code> definit anteriorment (fitxer
+<a href="http://soft0.upc.edu/dat/dat-prj/web-handler/Handler.hs">Handler.hs</a>) és isomòrfic al següent tipus:</p>
+<pre class="bg-light">Request -&gt; HandlerState -&gt; IO (a, HandlerState)
+</pre>
+<!--pre class="bg-light">
+Request -> HandlerState -> IO (a, HandlerState) = R (S IO) a
+R m a = Request -> m a
+S m a = HandlerState -> m (a, HandlerState)
+</pre-->
+
+<p>En realitat, la realització anterior del monad <em>Handler</em> consisteix en la construcció d'un:</p>
+<ul>
+  <li>context que afegeix un valor compartit de només lectura (de tipus <code>Request</code>) a un</li>
+  <li>context que afegeix un estat amb efectes de lectura i modificació (de tipus <code>HandlerState</code>) a un</li>
+  <li>monad de base <code>IO</code>.
+</li></ul>
+
+<!--p>En la realització anterior del <em>Handler</em>, en realitat, estem fent una implementació d'un:</p>
+<ul>
+  <li>monad que afegeix el context d'un valor compartit de només lectura (de tipus <code>Request</code>) a un</li>
+  <li>monad que afegeix el context d'un estat amb efectes de lectura i modificació  (de tipus <code>HandlerState</code>) a un</li>
+  <li>monad de base <code>IO</code>.
+</ul-->
+
+<p>Però en Haskell ja existeixen paquets que ofereixen tipus que permeten afegir nous efectes a monads ja existents.
+En la realització anterior estem reinventant la roda !</p>
+
+<p>Com ja s'ha dit, aquests tipus són els anomenats transformadors de monads.
+<!-- Si <code>T</code> és un transformador de monads, aleshores una expressió de tipus
+<code>T m a</code> és una acció del monad transformat <code>T m</code>.
+El transformador <code>T</code> afegeix un nou context al context del monad <code>m</code>.-->
+El paquet <a href="https://hackage.haskell.org/package/transformers">transformers</a>, a més de la classe <code>MonadTrans</code>,
+defineix varis transformadors de monads d'us general.
+En el nostre cas usarem els transformadors <code>ReaderT r</code> i <code>StateT s</code>.</p>
+ 
+<!--p>Aquest paquet també defineix la classe <code>MonadTrans</code>, que permet
+incrustar una acció del monad de base al monad transformat:</p>
+<pre class="bg-light">
+class MonadTrans t where
+    -- | Lift a computation from the argument monad to the constructed monad.
+    lift :: (Monad m) => m a -> t m a
+</pre-->
+
+<p>Però sovint resulta més còmode usar el paquet <a href="https://hackage.haskell.org/package/mtl">mtl</a>.
+Aquest paquet reexporta els mateixos transformadors, però a més defineix classes que permeten incorporar de forma més
+genèrica els efectes d'una cadena de transformadors.</p>
+
+<p>En aquest apartat usarem el paquet <a href="https://hackage.haskell.org/package/mtl">mtl</a>
+(mòduls <a href="https://hackage.haskell.org/package/mtl/docs/Control-Monad-Reader.html">Control.Monad.Reader</a> i
+<a href="https://hackage.haskell.org/package/mtl/docs/Control-Monad-State.html">Control.Monad.State</a>).</p>
+
+
+<!------------------------------------------------->
+<h4>Primer pas</h4>
+
+<p>Completeu el mòdul <code>Handler_T1</code> (fitxer <a href="http://soft0.upc.edu/dat/dat-prj/web-handler/Handler_T1.hs">Handler_T1.hs</a>)
+on el tipus <em>Handler</em> és un àlias al <em>stack</em> de transformadors:</p>
+<pre class="bg-light">type Handler = ReaderT Request (StateT HandlerState IO)
+</pre>
+
+<div class="row">
+  <div class="col-md-3">&nbsp;</div>
+  <div class="col-md-6">
+<table class="table table-bordered">
+<tbody><tr class="table-info"><td style="text-align: center">Transformador <code>ReaderT Request</code></td></tr>
+<tr class="table-primary"><td style="text-align: center">Transformador <code>StateT HandlerState</code></td></tr>
+<tr class="table-info"><td style="text-align: center">Monad <code>IO</code></td></tr>
+</tbody></table>
+  </div>
+  <div class="col-md-3">&nbsp;</div>
+</div>
+
+
+<!------------------------------------------------->
+<h4>Segon pas</h4>
+
+<p>Completeu el mòdul <code>Handler_T2</code> (fitxer <a href="http://soft0.upc.edu/dat/dat-prj/web-handler/Handler_T2.hs">Handler_T2.hs</a>)
+on el tipus <em>Handler</em> és un nou tipus, envoltori del <em>stack</em> de transformadors:</p>
+<pre class="bg-light">newtype Handler a = HandlerC (ReaderT Request (StateT HandlerState IO) a)
+</pre>
+
+<!--p><b>TODO</b>: Comentar l'extensió <code>GeneralizedNewtypeDeriving</code> que permet que el compilador pugui derivar les instàncies
+de Functor, Applicative, Monad i MonadIO.</p-->
+
+<p>En aquest cas, les instàncies de <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> i <code>MonadIO</code>
+per al tipus <code>Handler</code> s'implementen sistemàticament a partir de les corresponents instàncies per al tipus envoltat pel
+constructor <code>HandlerC</code>. Bàsicament, extreient els arguments del constructor i envoltant els resultats amb el constructor.</p>
+
+<p>Usant l'extensió
+<a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/newtype_deriving.html">GeneralizedNewtypeDeriving</a> el compilador
+pot derivar les instàncies indicades (amb la clàusula <code>deriving</code>) sense necessitat de implementar-les explícitament.
+Podeu observar com en el codi donat s'ha habilitat aquesta extensió (usant el corresponent
+<a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/pragmas.html#language-pragma"><em>pragma</em></a> al principi del fitxer).</p>
+
+
+<div class="alert alert-warning" role="alert">
+<p><b>ATENCIÓ</b>: Per provar la nova versió del <em>Handler</em>, en l'aplicació de prova (l'exemple <code>hello-2</code>)
+caldrà importar el mòdul <code>Handler_T1</code> o <code>Handler_T2</code>, en lloc del mòdul <code>Handler</code>.</p>
+</div>
+
+
+<!-- ================================================ -->
+<hr width="100%">
+<h2 id="joc">Realització d'un cas d'ús del monad Handler</h2>
+
+<p>En aquest apartat es demana la realització d'una senzilla aplicació WEB que usa el monad
+<code>Handler</code> que heu implementat anteriorment.</p>
+
+<p>L'aplicació consisteix en un joc que processa una cadena de caràcters i produeix una puntuació (número enter) a partir de la cadena.
+Durant el processat el monad <code>Handler</code> manté un estat amb la puntuació actual i un <em>flag</em> que indica si el joc està
+activat o desactivat.
+El processat dels caràcters consisteix en:</p>
+<ul>
+<li><code>*</code> commuta el joc activat o desactivat,</li>
+<li><code>+</code> incrementa la puntuació si el el joc està activat, i</li>
+<li><code>-</code> decrementa la puntuació si el el joc està activat.</li>
+<li>altres caràcters s'ignoren (no canvien el joc).</li>
+</ul>
+
+<p>La pàgina HTML de l'aplicació mostra l'estat actual del joc i un formulari que permeti a l'usuari introduir una cadena formada
+ per caràcters com els anteriors. Inicialment el joc està desactivat i la puntuació és 0.</p>
+ 
+<p>En cada interacció es modifica l'estat adeqüadament i es redirigeix novament a la pàgina de l'aplicació.</p>
+
+<p>Així doncs, després de l'estat inicial <code>(False, 0)</code>, si l'usuari introduís la seqüència de caràcters
+ <code>"*+-++*--*+"</code> s'obtindria l'estat resultant <code>(True, 3)</code>.</p>
+
+<p>El codi a completar de l'aplicació és el següent (copieu aquest codi en un fitxer en el mateix directori <code>dat-prj/wai-intro</code>
+on teniu el mòdul <code>Handler</code>):</p>
+
+<p>Podeu observar que l'estructura del codi és similar a la de l'exemple <code>hello-2.hs</code>.</p>
+
+<pre class="bg-light">{-# LANGUAGE OverloadedStrings #-}
+
+module Main
+where
+import           Network.Wai
+import           Network.Wai.Handler.Warp (runEnv)
+
+import           Handler
+
+import           Data.Text (Text)
+import qualified Data.Text as T
+
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as A
+
+-- ****************************************************************
+
+main :: IO ()
+main = do
+    -- runEnv :: Port -&gt; Application -&gt; IO ()
+    runEnv 4050 $ dispatchHandler gameApp
+
+-- ****************************************************************
+-- Controller
+
+gameApp :: Handler HandlerResponse
+gameApp = onMethod
+    [ ("GET", doGet)
+    , ("POST", doPost)
+    ]
+
+doGet :: Handler HandlerResponse
+doGet = ...
+
+doPost :: Handler HandlerResponse
+doPost = ...
+
+-- ****************************************************************
+-- View
+
+htmlView :: GameState -&gt; H.Html
+htmlView game =
+    H.docTypeHtml $ do
+        H.head $
+            H.title "A simple game ..."
+        H.body $ do
+            H.h1 $ H.text $ "Game state: " &lt;&gt; T.pack (show game)
+            H.hr
+            H.form H.! A.method "POST" H.! A.action "#" $ do
+                H.p $ do
+                    H.span "String to play:"
+                    H.input H.! A.name "playText"
+                H.input H.! A.type_ "submit" H.! A.name "ok" H.! A.value "Play"
+
+-- ****************************************************************
+-- Model
+
+-- Tipus de l'estat
+type GameState = (Bool, Int)
+
+startState :: GameState
+startState = (False, 0)
+
+playChar :: Char -&gt; GameState -&gt; GameState
+playChar ...
+
+playString :: String -&gt; GameState -&gt; GameState
+playString ...
+
+playText :: Text -&gt; GameState -&gt; GameState
+playText t = playString (T.unpack t)
+</pre>
+
+<div class="alert alert-info" role="alert">
+<p><b>Observacions</b>:
+</p><ul>
+<li>Per mantenir l'estat del joc caldrà usar les funcions <code>getSession</code> i <code>setSession</code> amb el nom
+<code>"playState"</code>.</li>
+<li>Per obtenir la cadena de caràcters introduïda per l'usuari caldrà utilitzar la funció <code>lookupPostParam</code> amb el nom
+<code>"playText"</code>.</li>
+</ul>
+</div>
+
+
+<!-- ================================================ --
+<hr width="100%">
+<a name="resources"></a>
+<h2>Recursos disponibles</h2>
+
+<dl>
+  <dt><a href="prog-web.zip">prog-web.zip</a></dt>
+    <dd><p>Directori de projecte de la segona part amb el codi font a completar per l'estudiant.</p></dd>
+  <dt><a href="https://www.yesodweb.com/book/web-application-interface">https://www.yesodweb.com/book/web-application-interface</a></dt>
+    <dd><p>Web Application Interface (WAI): Introducció.</p></dd>
+  <dt><a href="http://www.lambda-land.com/posts/2017-11-22-wai">http://www.lambda-land.com/posts/2017-11-22-wai</a></dt>
+    <dd><p>Web Application Interface (WAI): Una altra introducció.</p></dd>
+  <dt><a href="http://hackage.haskell.org/package/wai">http://hackage.haskell.org/package/wai</a></dt>
+    <dd><p>Web Application Interface (WAI): Documentació del API.</p></dd>
+  </ul>
+</dl-->
+
+</main>
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga / Marcel Fernàndez, Abril 2026</span>
+  </div>
+</footer>
+
+<!-- Optional JavaScript -->
+<!--script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script-->
+
+
+
+</body></html>
