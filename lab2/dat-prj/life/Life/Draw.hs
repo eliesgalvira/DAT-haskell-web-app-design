@@ -5,8 +5,7 @@ import Drawing
 
 drawBoard :: Board -> Drawing
 drawBoard board =
-    drawGrid (minLiveCell board) (maxLiveCell board)
-        <> foldMap drawCell (liveCells board)
+    foldMap drawCell (liveCells board)
     where
         drawCell (col, row) =
             translated (fromIntegral col) (fromIntegral row) $

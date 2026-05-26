@@ -15,7 +15,11 @@ import qualified Data.Text as T
 
 data Game = Game
         { gmBoard :: Board      -- last board generation
+        , gmGridMode :: GridMode
         }
+
+data GridMode = NoGrid | LivesGrid | ViewGrid
+    deriving (Eq, Show)
 
 -----------------------------------------------------
 -- Initialization
@@ -32,6 +36,7 @@ board0Cells =
 
 initial = Game
     { gmBoard = foldr (setCell True) initBoard board0Cells
+    , gmGridMode = NoGrid
     }
 
 -----------------------------------------------------
@@ -40,12 +45,16 @@ initial = Game
 data Action =
           NextStep
         | SetCell Point
+        | ChangeGridMode
         deriving (Eq, Show)
 
 update :: Action -> State Game ()
 update NextStep =               -- Next generation
     modify $
         \game -> game{ gmBoard = nextGeneration (gmBoard game) }
+update ChangeGridMode =
+    modify $
+        \game -> game{ gmGridMode = nextGridMode (gmGridMode game) }
 update (SetCell point) =  do    -- Set live/dead cells
     game <- get
     let pos = pointToPos point
@@ -54,6 +63,11 @@ update (SetCell point) =  do    -- Set live/dead cells
 
 pointToPos :: Point -> Pos
 pointToPos (x, y) = (round x, round y)
+
+nextGridMode :: GridMode -> GridMode
+nextGridMode NoGrid = LivesGrid
+nextGridMode LivesGrid = ViewGrid
+nextGridMode ViewGrid = NoGrid
 
 -----------------------------------------------------
 -- View state
@@ -68,8 +82,22 @@ view game =
 
 keyMap :: T.Text -> Maybe Action
 keyMap "N" = Just NextStep
+keyMap "G" = Just ChangeGridMode
 keyMap _   = Nothing
 
 draw game =
-    drawBoard (gmBoard game)
+    drawGridForMode game <> drawBoard (gmBoard game)
 
+drawGridForMode :: Game -> Drawing
+drawGridForMode game =
+    case gmGridMode game of
+        NoGrid ->
+            blank
+        LivesGrid ->
+            drawGrid (minLiveCell board) (maxLiveCell board)
+        ViewGrid ->
+            drawGrid viewMin viewMax
+    where
+        board = gmBoard game
+        viewMin = pointToPos (-viewWidth / 2, -viewHeight / 2)
+        viewMax = pointToPos (viewWidth / 2, viewHeight / 2)
