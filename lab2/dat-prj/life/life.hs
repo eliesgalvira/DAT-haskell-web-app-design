@@ -7,7 +7,9 @@ import Life.Draw
 
 import Drawing
 import Drawing.Activity
+import Drawing.Vector
 
+import Control.Monad (when)
 import qualified Data.Text as T
 
 -----------------------------------------------------
@@ -16,6 +18,8 @@ import qualified Data.Text as T
 data Game = Game
         { gmBoard :: Board      -- last board generation
         , gmGridMode :: GridMode
+        , gmZoom :: Double
+        , gmShift :: Point
         }
 
 data GridMode = NoGrid | LivesGrid | ViewGrid
@@ -37,6 +41,8 @@ board0Cells =
 initial = Game
     { gmBoard = foldr (setCell True) initBoard board0Cells
     , gmGridMode = NoGrid
+    , gmZoom = 1.0
+    , gmShift = (0.0, 0.0)
     }
 
 -----------------------------------------------------
@@ -46,6 +52,9 @@ data Action =
           NextStep
         | SetCell Point
         | ChangeGridMode
+        | ZoomOut
+        | ZoomIn
+        | AddShift Point
         deriving (Eq, Show)
 
 update :: Action -> State Game ()
@@ -55,14 +64,27 @@ update NextStep =               -- Next generation
 update ChangeGridMode =
     modify $
         \game -> game{ gmGridMode = nextGridMode (gmGridMode game) }
+update ZoomOut = do
+    game <- get
+    when (gmZoom game > 0.25) $
+        put game{ gmZoom = gmZoom game / 2.0 }
+update ZoomIn = do
+    game <- get
+    when (gmZoom game < 2.0) $
+        put game{ gmZoom = gmZoom game * 2.0 }
+update (AddShift shift) =
+    modify $
+        \game -> game{ gmShift = gmShift game ^+^ shift }
 update (SetCell point) =  do    -- Set live/dead cells
     game <- get
-    let pos = pointToPos point
+    let pos = pointToPos game point
         brd = gmBoard game
     put game{ gmBoard = setCell (not $ cellIsLive pos brd) pos brd }
 
-pointToPos :: Point -> Pos
-pointToPos (x, y) = (round x, round y)
+pointToPos :: Game -> Point -> Pos
+pointToPos game point =
+    let (x, y) = (1.0 / gmZoom game) *^ point ^-^ gmShift game
+    in (round x, round y)
 
 nextGridMode :: GridMode -> GridMode
 nextGridMode NoGrid = LivesGrid
@@ -83,10 +105,21 @@ view game =
 keyMap :: T.Text -> Maybe Action
 keyMap "N" = Just NextStep
 keyMap "G" = Just ChangeGridMode
+keyMap "O" = Just ZoomOut
+keyMap "I" = Just ZoomIn
+keyMap "ARROWUP" = Just $ AddShift (0, -1)
+keyMap "ARROWDOWN" = Just $ AddShift (0, 1)
+keyMap "ARROWRIGHT" = Just $ AddShift (-1, 0)
+keyMap "ARROWLEFT" = Just $ AddShift (1, 0)
 keyMap _   = Nothing
 
+draw :: Game -> Drawing
 draw game =
-    drawGridForMode game <> drawBoard (gmBoard game)
+    dilated (gmZoom game) $
+        translated shiftX shiftY $
+            drawGridForMode game <> drawBoard (gmBoard game)
+    where
+        (shiftX, shiftY) = gmShift game
 
 drawGridForMode :: Game -> Drawing
 drawGridForMode game =
@@ -99,5 +132,5 @@ drawGridForMode game =
             drawGrid viewMin viewMax
     where
         board = gmBoard game
-        viewMin = pointToPos (-viewWidth / 2, -viewHeight / 2)
-        viewMax = pointToPos (viewWidth / 2, viewHeight / 2)
+        viewMin = pointToPos game (-viewWidth / 2, -viewHeight / 2)
+        viewMax = pointToPos game (viewWidth / 2, viewHeight / 2)
