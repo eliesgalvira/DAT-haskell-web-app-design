@@ -23,6 +23,7 @@ library lab1-internals
   hs-source-dirs: lab1
   build-depends:  base >=4.17 && <5
   default-language: Haskell2010
+  default-extensions: TupleSections
   ghc-options:    -Wall
 
 -- mps1: basic stack machine (Instr1)

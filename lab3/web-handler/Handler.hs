@@ -65,19 +65,18 @@ instance Applicative Handler where
     -- tipus en aquesta instancia:
     --      pure  :: a -> Handler a
     --      (<*>) :: Handler (a -> b) -> Handler a -> Handler b
-    pure x =
-        -- (A completar per l'estudiant)
-        ...
-    hf <*> hx =
-        -- (A completar per l'estudiant)
-        ...
+    pure x = HandlerC $ \ _ st0 -> pure (x, st0)
+    hf <*> hx = HandlerC $ \ req st0 -> do
+        (f, st1) <- runHandler hf req st0
+        (x, st2) <- runHandler hx req st1
+        pure (f x, st2)
 
 instance Monad Handler where
     -- tipus en aquesta instancia:
     --      (>>=) :: Handler a -> (a -> Handler b) -> Handler b
-    hx >>= k =
-        -- (A completar per l'estudiant)
-        ...
+    hx >>= k = HandlerC $ \ req st0 -> do
+        (x, st1) <- runHandler hx req st0
+        runHandler (k x) req st1
 
 -- class MonadIO: Monads in which IO computations may be embedded.
 -- The method 'liftIO' lifts a computation from the IO monad.
@@ -99,15 +98,11 @@ asksRequest f = HandlerC $ \ req st0 ->
 
 -- Obte informació de l'estat del handler
 getsHandlerState :: (HandlerState -> a) -> Handler a
-getsHandlerState f =
-    -- (A completar per l'estudiant)
-    ...
+getsHandlerState f = HandlerC $ \ _ st0 -> pure (f st0, st0)
 
 -- Modifica l'estat del handler
 modifyHandlerState :: (HandlerState -> HandlerState) -> Handler ()
-modifyHandlerState f =
-    -- (A completar per l'estudiant)
-    ...
+modifyHandlerState f = HandlerC $ \ _ st0 -> pure ((), f st0)
 
 -- ****************************************************************
 
@@ -219,8 +214,7 @@ lookupPostParams name = do
             --   fst :: (a, b) -> a
             --   snd :: (a, b) -> b
             --   filter :: (a -> Bool) -> [a] -> [a]
-            -- (A completar per l'estudiant)
-            ...
+            pure $ snd <$> filter ((name ==) . fst) params
         Nothing ->
             -- El contingut de la peticio no es un formulari. No hi ha valors.
             pure []
@@ -283,4 +277,3 @@ getAllBody req = do
     else do
         bs <- getAllBody req
         pure $ b <> bs
-

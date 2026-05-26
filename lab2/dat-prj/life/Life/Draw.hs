@@ -5,8 +5,12 @@ import Drawing
 
 drawBoard :: Board -> Drawing
 drawBoard board =
-    -- A completar per l'estudiant
-    ...
+    drawGrid (minLiveCell board) (maxLiveCell board)
+        <> foldMap drawCell (liveCells board)
+    where
+        drawCell (col, row) =
+            translated (fromIntegral col) (fromIntegral row) $
+                colored green $ solidRectangle 0.9 0.9
 
 -- 'drawGrid minPos maxPos' obte el dibuix d'una graella que inclou els 2 extrems indicats.
 -- 'minPos' es la posicio de l'extrem (esquerra, inferior) i
@@ -21,4 +25,3 @@ drawGrid minPos maxPos =
         hline row = polyline [ posToCoords (fst minPos, row), posToCoords (fst maxPos + 1, row) ]
         vline col = polyline [ posToCoords (col, snd minPos), posToCoords (col, snd maxPos + 1) ]
         posToCoords (col, row) = (fromIntegral col - 0.5, fromIntegral row - 0.5)
-

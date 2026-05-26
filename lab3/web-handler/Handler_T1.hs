@@ -37,12 +37,10 @@ import           Text.Read (readMaybe)
 -- El context d'un Handler compren:
 --      L'argument Request que permet obtenir informacio sobre la peticio.
 --      L'estat del Handler (argument i resultat de les operacions).
-type Handler = ReaderT Request (StateT HandlerState IO)
+type Handler = ReaderT W.Request (StateT HandlerState IO)
 
 runHandler :: Handler a -> W.Request -> HandlerState -> IO (a, HandlerState)
-runHandler m r s0 =
-    -- (A completar per l'estudiant)
-    ...
+runHandler m r s0 = runStateT (runReaderT m r) s0
 
 
 -- HandlerState compren:
@@ -64,21 +62,15 @@ hsSetSession s (HandlerStateC q _) = HandlerStateC q s
 
 -- Obte informació de la peticio
 asksRequest :: (W.Request -> a) -> Handler a
-asksRequest =
-    -- (A completar per l'estudiant)
-    ...
+asksRequest = asks
 
 -- Obte informació de l'estat del handler
 getsHandlerState :: (HandlerState -> a) -> Handler a
-getsHandlerState =
-    -- (A completar per l'estudiant)
-    ...
+getsHandlerState = gets
 
 -- Modifica l'estat del handler
 modifyHandlerState :: (HandlerState -> HandlerState) -> Handler ()
-modifyHandlerState =
-    -- (A completar per l'estudiant)
-    ...
+modifyHandlerState = modify
 
 -- ****************************************************************
 
@@ -190,8 +182,7 @@ lookupPostParams name = do
             --   fst :: (a, b) -> a
             --   snd :: (a, b) -> b
             --   filter :: (a -> Bool) -> [a] -> [a]
-            -- (A completar per l'estudiant)
-            ...
+            pure $ snd <$> filter ((name ==) . fst) params
         Nothing ->
             -- El contingut de la peticio no es un formulari. No hi ha valors.
             pure []
@@ -254,4 +245,3 @@ getAllBody req = do
     else do
         bs <- getAllBody req
         pure $ b <> bs
-

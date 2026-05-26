@@ -1,1 +1,10 @@
-packages: .
+packages:
+  .
+  lab2/dat-prj/life
+  lab2/dat-prj/libs/drawing-activity-0.2.1.0
+  lab2/dat-prj/libs/drawing-core-0.1.2.0
+  lab2/dat-prj/libs/jsaddle-warp-extra-0.1.0.0
+  lab2/dat-prj/libs/datfw-core-0.2.0.0
+  lab3/wai-intro
+  lab3/web-handler
+  lab4
