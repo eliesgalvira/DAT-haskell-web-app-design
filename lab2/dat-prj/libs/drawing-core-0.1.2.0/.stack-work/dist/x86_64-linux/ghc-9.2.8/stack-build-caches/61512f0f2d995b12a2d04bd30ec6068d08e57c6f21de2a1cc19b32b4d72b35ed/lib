@@ -1,0 +1,20 @@
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/CHANGELOG.md:
+  hash: 90b1a5e1be9bb07f5004efbf024e5b2c52ea4183abca5fc70c734e31b71fae64
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/README.md:
+  hash: c3d0df268a4387517ef565de8237061dede959004568137e9abc04f53280bcd5
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/drawing-core.cabal:
+  hash: 3fdac631d7fab075d4ed41124372eb462557a99d98e61c96c46ad3dd78a7e461
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing.hs:
+  hash: 0620b45876dd4d3ef1a50ca9fcb8e02d98eb21f3d234cafb470b8e6ffc232987
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing/IO.hs:
+  hash: b01d4c8f1643ac87e75243f0c2b9eb7d51fe69431008d0003862d855e6dddeef
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing/Image.hs:
+  hash: 461bbdca0b4e5e117385dd53ced54df7296c291bb74a8e35a56d417479845c22
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing/Render.hs:
+  hash: f87efd7c46aeed0c971fdb38cc74ee6d7d415f669460f1b670b97dd9d98168fc
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing/Types.hs:
+  hash: 9c89bb4d1e1907919eae18b1dc23323ba3436b2e20b72341366c93af92696c9e
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/src/Drawing/Vector.hs:
+  hash: e7d69f3240fe0c3903e8ac71eda33a0f2a7d45d6bfaa839ce0dced60f17469f2
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-core-0.1.2.0/test/AC.png:
+  hash: 3aa0a80a9d2e2b5b5d1796159eed81df247073f33e2e5fbde9dde72e34dcbc59

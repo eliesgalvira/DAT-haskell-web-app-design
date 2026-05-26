@@ -1,0 +1,20 @@
+/home/bigweld/.ghcup/ghc/9.2.8/lib/ghc-9.2.8/include/ghcversion.h:
+  hash: 10980ec0f1a6f6f31856fe1e1a51a5359d97b178636eae9fb2348f20c650207a
+? /home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/.stack-work/dist/x86_64-linux/ghc-9.2.8/build/autogen/cabal_macros.h
+: hash: c25f32ec9c7bd91ae5d63f52bdafd066e58cc356d0bee4f91533a3fab98e6eca
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/drawing-activity.cabal:
+  hash: 31a3f88d7443661ba22f9e494c1c0a789f50b6089d9c49b8a982c3088fa07356
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/src/Drawing/Activity.hs:
+  hash: 57ad5515ca02f07538e5e35556f419abb44214d80aa813095e62a51ffb31dc2a
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/src/Drawing/Activity/Internal/Event.hs:
+  hash: e3d7b70a87148f214dae77d959a86a0290dfaaa72863843d34995b7cdc24287c
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/src/Drawing/Activity/StableNamed.hs:
+  hash: 60e06064c1ccc9fabae0009e59d87c38e216ea3887df254361d32bb52a737c98
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/src/Drawing/Activity/Timer.hs:
+  hash: 91a3c3cb0e2bbbddc52b88238ce87404843f2a6ee3dc34db1895c5f29cb23cda
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/static/bootstrap.4.1.3.min.css:
+  hash: 7928b5ab63c6e89ee0ee26f5ef201a58c72baf91abb688580a1aa26eb57b3c11
+/home/bigweld/Repos/DAT-haskell-web-app-design/lab2/dat-prj/libs/drawing-activity-0.2.1.0/static/index.html:
+  hash: 44a1970641499c99c1456a38a53f1932305099d1d0014d58a4c49cf20c8824f0
+/usr/include/stdc-predef.h:
+  hash: 383ff8bd7dcc87deefedd062637f4afe28f85f8be443beda8b41d15e45ef1679
