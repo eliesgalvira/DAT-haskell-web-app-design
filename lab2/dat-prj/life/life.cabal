@@ -15,6 +15,7 @@ executable life
   build-depends:
     base >=4.7 && <5,
     aeson,
+    bytestring,
     containers,
     drawing-activity >=0.2,
     drawing-core >=0.1,
