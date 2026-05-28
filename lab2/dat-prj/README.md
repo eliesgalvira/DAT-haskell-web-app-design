@@ -1,13 +1,14 @@
 
-Aquest directori és l'arrel del projecte 'stack' de pràctiques del curs de DAT (Disseny d'Aplicacions Telemàtiques).
-Conté tot el codi font i material necessari de les pràctiques descrites en la la documentació de DAT.
+Aquest directori és l'arrel del projecte de la pràctica 2 del curs de DAT
+(Disseny d'Aplicacions Telemàtiques).
+Conté l'aplicació `life` i les biblioteques locals necessàries per compilar-la.
 
 Contingut:
 - `README.md` (aquest fitxer).
-- `stack.yaml` (configuració del projecte 'stack').
-- `libs/` (dependències d'altres paquets que no es troben en el repositori).
-- `*/` (paquets d'aquest projecte. Hi ha un paquet per a cada pràctica).
+- `stack.yaml` (configuració mínima del projecte `stack`).
+- `cabal.project` (configuració mínima equivalent per a `cabal`).
+- `life/` (paquet de la pràctica 2).
+- `libs/` (biblioteques locals necessàries per a `life`).
 
 Visiteu la [pàgina principal de la documentació de DAT](http://soft0.upc.edu/dat/index.html)
-
 
