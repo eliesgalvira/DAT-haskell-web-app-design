@@ -1,0 +1,62 @@
+cabal-version: 3.0
+name:          dat-lab01
+version:       0.1.0.0
+synopsis:      DAT lab 1 exercises
+license:       NONE
+build-type:    Simple
+
+library lab1-internals
+  exposed-modules:
+    Analitzador
+    ECompile
+    ESyntax
+    Instr1
+    Instr1Estat
+    Instr2
+    Instr3
+    Ops
+  hs-source-dirs: .
+  build-depends:  base >=4.17 && <5
+  default-language: Haskell2010
+  default-extensions: TupleSections
+  ghc-options:    -Wall
+
+executable mps1
+  main-is:        mps1.hs
+  other-modules:
+    Instr1
+    Ops
+  build-depends:  base >=4.17 && <5, dat-lab01:lab1-internals
+  default-language: Haskell2010
+  ghc-options:    -Wall
+
+executable mps2
+  main-is:        mps2.hs
+  other-modules:
+    Instr2
+    Ops
+  build-depends:  base >=4.17 && <5, dat-lab01:lab1-internals
+  default-language: Haskell2010
+  ghc-options:    -Wall
+
+executable mps3
+  main-is:        mps3.hs
+  other-modules:
+    Instr3
+    Ops
+  build-depends:  base >=4.17 && <5, dat-lab01:lab1-internals
+  default-language: Haskell2010
+  ghc-options:    -Wall
+
+executable me
+  main-is:        me.hs
+  other-modules:
+    Analitzador
+    ECompile
+    ESyntax
+    Instr3
+    Ops
+  build-depends:  base >=4.17 && <5, dat-lab01:lab1-internals
+  default-language: Haskell2010
+  default-extensions: TupleSections
+  ghc-options:    -Wall

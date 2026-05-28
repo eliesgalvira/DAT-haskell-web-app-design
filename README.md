@@ -1,46 +1,48 @@
 # DAT Haskell Labs
 
-## Build
+Each lab now has its own minimal build config. Run build commands from the lab
+directory instead of using a root project file.
+
+## Lab 1
 
 ```sh
-cabal build all            # Build everything
-cabal build lib:lab1-internals  # Build only the lab1 library
-cabal build exe:mps1       # Build a single executable
-```
-
-## Run
-
-```sh
-cabal run mps1 -- <args>   # Run an executable with arguments
-cabal run me -- <args>
-```
-
-Runnable targets:
-
-```sh
+cd lab1
+cabal build all
 cabal run exe:mps1
 cabal run exe:mps2
 cabal run exe:mps3
 cabal run exe:me
-cabal run exe:exemple
-cabal run exe:life
+```
+
+## Lab 2
+
+```sh
+cd lab2/dat-prj
+stack build
+stack run life
+```
+
+## Lab 3
+
+```sh
+cd lab3
+cabal build all
 cabal run exe:holamon
 cabal run exe:acumulador0
 cabal run exe:acumulador
 cabal run exe:hello-1
 cabal run exe:hello-2
+```
+
+## Lab 4
+
+```sh
+cd lab4
+cabal build all
 cabal run exe:forums-app -- 4050
 ```
 
-## Clean
+## Submission Archives
 
-```sh
-cabal clean                # Remove all build artifacts
-```
-
-## REPL
-
-```sh
-cabal repl lab1-internals  # Load lab1 library modules in GHCi
-cabal repl exe:mps1        # Load an executable in GHCi
-```
+`lab2.zip` is generated from `lab2/dat-prj` and excludes build output such as
+`.stack-work`, `dist-newstyle`, `stack.yaml.lock`, and editor metadata.
