@@ -1,7 +1,7 @@
 dist-newstyle/
 .stack-work/
 stack.yaml.lock
-hie.yaml
+.zed/
 *.hi
 *.o
 *.dyn_hi
