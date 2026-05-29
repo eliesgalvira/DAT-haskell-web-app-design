@@ -1,0 +1,284 @@
+--- original/Analitzador.hs
++++ solution/Analitzador.hs
+@@ -35,20 +35,33 @@
+     f _  = Nothing
+ 
+ instance Functor Analitzador where
+-    -- A completar per l'estudiant
+-    -- fmap :: (a -> b) -> Analitzador a -> Analitzador b
++    fmap g (Analitzador p) =
++        Analitzador $ \input ->
++            (\(x, rest) -> (g x, rest)) <$> p input
+ 
+ instance Applicative Analitzador where
+-    -- A completar per l'estudiant
+-    -- pure :: a -> Analitzador a
+-    -- (<*>) :: Analitzador (a -> b) -> Analitzador a -> Analitzador b
+-    (<*>) = error "(<*>): A completar per l'estudiant"
++    pure x = Analitzador $ \input -> Just (x, input)
++    Analitzador pf <*> Analitzador px =
++        Analitzador $ \input -> do
++            -- Primer s'analitza una funcio a partir de l'entrada actual.
++            -- Si te exit, el segon parser continua exactament sobre el text
++            -- que ha quedat pendent, i al final apliquem la funcio al resultat.
++            (f, rest) <- pf input
++            (x, rest') <- px rest
++            pure (f x, rest')
+ 
+ instance Alternative Analitzador where
+-    -- A completar per l'estudiant
+-    -- empty :: Analitzador a
+-    -- (<|>) :: Analitzador a -> Analitzador a -> Analitzador a
++    empty = Analitzador $ const Nothing
++    Analitzador p1 <|> Analitzador p2 =
++        Analitzador $ \input ->
++            -- Les alternatives representen "prova aquest parser; si falla,
++            -- torna a provar des del mateix punt amb l'altre parser".
++            case p1 input of
++                Just r -> Just r
++                Nothing -> p2 input
+ 
+ cadenaA :: String -> Analitzador String
+-cadenaA = error "cadenaA: A completar per l'estudiant"
+-
++cadenaA [] = pure []
++-- Per reconeixer una cadena concreta, exigim que cada caracter coincideixi
++-- exactament amb el prefix de l'entrada i anem avançant recursivament.
++cadenaA (c : cs) = (:) <$> caracterA c <*> cadenaA cs
+--- original/ECompile.hs
++++ solution/ECompile.hs
+@@ -18,16 +18,21 @@
+         Nothing -> Left $ "Undefined operator: " <> name
+     if np == length args then pure ()
+                          else Left $ "Expected "<>show np<>" arguments"
+-    -- compila els arguments, obtenint les corresponents instruccions,
+-    -- i afegeix la instrucció 'i' al final
+-    error "compila: A completar per l'estudiant"
++    -- En una maquina de pila, primer hem de deixar tots els arguments
++    -- a la pila i nomes despres executar l'operacio.
++    -- Per aixo compilem recursivament cada argument, concatenem el codi
++    -- generat i finalment afegim la instruccio de l'operador al final.
++    instrs <- traverse compila args
++    pure $ concat instrs <> [i]
+ 
+ -- 'getOp name' obté 'Nothing' si 'name' no és una de les operacions definides ("add", "sub", ...),
+ -- o obté 'Just (np, i)' si correspon a la instrucció 'i' amb 'np' arguments.
+ getOp :: String -> Maybe (Int, Instr)
+-getOp name = error "getOp: A completar per l'estudiant"
+-    -- usant el fet que Maybe es instancia d'Alternative
+-    -- (useu binOps, unOps, fmap i (<|>))
++getOp name =
++    -- 'Maybe' amb '<|>' ens permet provar diverses taules de noms.
++    -- Si el nom correspon a una operacio binaria retornem aritat 2;
++    -- si no, intentem interpretar-lo com una operacio unaria.
++    ((2,) . IBinOp <$> binOps name) <|> ((1,) . IUnOp <$> unOps name)
+ 
+ binOps :: String -> Maybe BinOp
+ binOps "add" = Just Add
+@@ -40,4 +45,3 @@
+ unOps :: String -> Maybe UnOp
+ unOps "neg" = Just Neg
+ unOps _     = Nothing
+-
+--- original/ESyntax.hs
++++ solution/ESyntax.hs
+@@ -12,10 +12,16 @@
+     deriving Show
+ 
+ exprP :: Analitzador Expr
+-exprP = error "exprP: A completar per l'estudiant"
++exprP =
++    -- La gramatica diu que una expressio pot ser:
++    -- 1) un identificador seguit d'un o mes atoms  -> aplicacio
++    -- 2) un atom sol                                -> literal o parentesis
++    -- Provem primer el cas d'aplicacio, que es el mes específic.
++    (EApp <$> ident <*> some atomP) <|> atomP
+ 
+ atomP :: Analitzador Expr
+-atomP = error "atomP: A completar per l'estudiant"
++atomP =
++    (ELit <$> numero) <|> parens exprP
+ 
+ --------------------------------------------------
+ 
+@@ -23,12 +29,10 @@
+ -- que pugui haver-hi despres del text analitzat.
+ 
+ numero :: Analitzador Int
+-numero = error "numero: A completar per l'estudiant"
+-    -- usant eliminaEspais i enterPosA
++numero = eliminaEspais enterPosA
+ 
+ simbol :: String -> Analitzador String
+-simbol = error "simbol: A completar per l'estudiant"
+-    -- usant eliminaEspais i cadenaA
++simbol = eliminaEspais . cadenaA
+ 
+ ident :: Analitzador String
+ ident =
+@@ -37,19 +41,23 @@
+ 
+ 
+ parens :: Analitzador a -> Analitzador a
+-parens p = error "parens: A completar per l'estudiant"
++parens p = simbol "(" *> p <* simbol ")"
+ 
+ 
+ -- Aplica l'analitzador indicat i elimina l'espai en blanc
+ -- que pugui haver-hi despres del text analitzat.
+ eliminaEspais :: Analitzador a -> Analitzador a
+-eliminaEspais p = error "eliminaEspais: A completar per l'estudiant"
++eliminaEspais p = p <* espaisEnBlanc
+ 
+ -- Multiples espais o comentaris
+ espaisEnBlanc :: Analitzador ()
+-espaisEnBlanc = error "espaisEnBlanc: A completar per l'estudiant"
++espaisEnBlanc =
++    -- Aquest parser no construeix cap valor util: nomes "neteja" l'entrada.
++    -- Va consumint tants blocs d'espais o comentaris com trobi seguits.
++    many (espais <|> comentari) *> pure ()
++  where
++    espais = some (complirA isSpace) *> pure ()
+ 
+ comentari :: Analitzador ()
+ comentari =
+     cadenaA "--" *> many (complirA (/= '\n')) *> complirA (=='\n') *> pure ()
+-
+--- original/Instr1Estat.hs
++++ solution/Instr1Estat.hs
+@@ -23,11 +23,15 @@
+ 
+ instance Functor ICodeM where
+     -- fmap :: (a -> b) -> ICodeM a -> ICodeM b
+-    fmap g m = error "ICodeM.fmap: A completar per l'estudiant"
++    fmap g mx = ICodeM $ \xs ->
++        -- Un calcul d'ICodeM produeix dues coses: un valor i una pila nova.
++        -- 'fmap' nomes transforma el valor produït; la pila resultant no es toca.
++        let (x, xs') = runICodeM mx xs
++        in (g x, xs')
+ 
+ instance Applicative ICodeM where
+     -- pure :: a -> ICodeM a
+-    pure x = error "ICodeM.pure: A completar per l'estudiant"
++    pure x = ICodeM $ \xs -> (x, xs)
+     -- (<*>) :: ICodeM (a -> b) -> ICodeM a -> ICodeM b
+     mf <*> mx = ICodeM $ \ xs ->
+         let (f, xs') = runICodeM mf xs
+@@ -36,18 +40,32 @@
+ 
+ instance Monad ICodeM where
+     -- (>>=) :: ICodeM a -> (a -> ICodeM b) -> ICodeM b
+-    mx >>= k = error "ICodeM.>>=: A completar per l'estudiant"
++    mx >>= k = ICodeM $ \xs ->
++        -- Primer executem el calcul inicial sobre la pila d'entrada.
++        -- Despres, el calcul següent rep el valor obtingut i continua
++        -- a partir de la pila actualitzada pel primer calcul.
++        let (x, xs') = runICodeM mx xs
++        in runICodeM (k x) xs'
+ 
+ runInstrs :: IProgram -> ICodeM ()
+ runInstrs is = mapM_ runInstr1 is
+ 
+ runInstr1 :: Instr -> ICodeM ()
+-runInstr1 = error "runInstr1: A completar per l'estudiant"
+--- (usant push i pop)
++runInstr1 (IConst x) =
++    push x
++runInstr1 (IUnOp op) = do
++    x <- pop
++    push $ doUnOp op x
++runInstr1 (IBinOp op) = do
++    -- La pila guarda l'ultim valor calculat al capdamunt.
++    -- Per a una operacio binaria, el primer 'pop' dona l'operand dret
++    -- i el segon 'pop' dona l'operand esquerre.
++    x2 <- pop
++    x1 <- pop
++    push $ doBinOp op x1 x2
+ 
+ push :: Int -> ICodeM ()
+ push x = ICodeM $ \ xs -> ((), x : xs)
+ 
+ pop :: ICodeM Int
+-pop = error "pop: A completar per l'estudiant"
+-
++pop = ICodeM $ \ (x : xs) -> (x, xs)
+--- original/Instr3.hs
++++ solution/Instr3.hs
+@@ -16,13 +16,26 @@
+ 
+ runIProgram :: IProgram -> Either String Int
+ runIProgram is =
+-    error "runIProgram: A completar per l'estudiant"
++    do
++        xs <- runInstrs is []
++        runTop xs
+ 
+ type Stack = [Int]
+ 
+-{- A completar per l'estudiant:
+-    runTop :: Stack -> Either String Int
+-    runInstrs :: IProgram -> Stack -> Either String Stack
+-    runInstr1 :: Instr -> Stack -> Either String Stack
+--}
++runTop :: Stack -> Either String Int
++runTop [x] = Right x
++runTop _ = Left "La pila no conté exactament un valor"
+ 
++runInstrs :: IProgram -> Stack -> Either String Stack
++runInstrs is xs =
++    foldlM (flip runInstr1) xs is
++
++runInstr1 :: Instr -> Stack -> Either String Stack
++runInstr1 (IConst x) xs =
++    Right $ x : xs
++runInstr1 (IUnOp op) (x1 : xs) =
++    Right $ doUnOp op x1 : xs
++runInstr1 (IBinOp op) (x2 : x1 : xs) =
++    Right $ doBinOp op x1 x2 : xs
++runInstr1 _ _ =
++    Left "No hi ha prou elements a la pila"
+--- original/mps2.hs
++++ solution/mps2.hs
+@@ -35,7 +35,8 @@
+         parseWord w     = IConst <$> readMaybe w
+ 
+ traverseList :: Applicative m => (a -> m b) -> [a] -> m [b]
+-traverseList ... =
+-    -- A completar per l'estudiant
+-    ...
++traverseList _ [] =
++    pure []
++traverseList f (x : xs) =
++    (:) <$> f x <*> traverseList f xs
+ 
+--- original/mps3.hs
++++ solution/mps3.hs
+@@ -15,9 +15,26 @@
+ mainWith :: String -> IO ()
+ mainWith filename = do
+     input <- readFile filename
+-    -- A completar per l'estudiant
++    case parseLine input >>= runIProgram of
++        Right r  -> putStrLn $ "Ok: " <> show r
++        Left err -> putStrLn $ "Error: " <> err
+ 
+ parseLine :: String -> Either String [Instr]
+ parseLine s =
+-    -- A completar per l'estudiant
++    traverseList parseWord $ words s
++  where
++    parseWord :: String -> Either String Instr
++    parseWord "Add" = pure $ IBinOp Add
++    parseWord "Sub" = pure $ IBinOp Sub
++    parseWord "Mul" = pure $ IBinOp Mul
++    parseWord "Div" = pure $ IBinOp Div
++    parseWord "Mod" = pure $ IBinOp Mod
++    parseWord "Neg" = pure $ IUnOp Neg
++    parseWord w =
++        case readMaybe w of
++            Just n -> pure $ IConst n
++            Nothing -> Left $ "Unknown word: " <> w
+ 
++traverseList :: Applicative f => (a -> f b) -> [a] -> f [b]
++traverseList _ [] = pure []
++traverseList f (x : xs) = (:) <$> f x <*> traverseList f xs
