@@ -1,0 +1,18 @@
+cradle:
+  stack:
+    - path: "./wai-intro/holamon.hs"
+      component: "wai-intro:exe:holamon"
+    - path: "./wai-intro/acumulador0.hs"
+      component: "wai-intro:exe:acumulador0"
+    - path: "./wai-intro/acumulador.hs"
+      component: "wai-intro:exe:acumulador"
+    - path: "./wai-intro/hello-1.hs"
+      component: "wai-intro:exe:hello-1"
+    - path: "./web-handler/hello-2.hs"
+      component: "web-handler:exe:hello-2"
+    - path: "./web-handler/Handler.hs"
+      component: "web-handler:lib"
+    - path: "./web-handler/Handler_T1.hs"
+      component: "web-handler:lib"
+    - path: "./web-handler/Handler_T2.hs"
+      component: "web-handler:lib"

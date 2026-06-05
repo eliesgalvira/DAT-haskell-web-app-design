@@ -26,12 +26,12 @@ stack run life
 
 ```sh
 cd lab3
-cabal build all
-cabal run exe:holamon
-cabal run exe:acumulador0
-cabal run exe:acumulador
-cabal run exe:hello-1
-cabal run exe:hello-2
+stack build
+stack run holamon
+stack run acumulador0
+stack run acumulador
+stack run hello-1
+stack run hello-2
 ```
 
 ## Lab 4

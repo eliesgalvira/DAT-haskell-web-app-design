@@ -1,0 +1,5 @@
+resolver: lts-20.26
+
+packages:
+- wai-intro
+- web-handler
