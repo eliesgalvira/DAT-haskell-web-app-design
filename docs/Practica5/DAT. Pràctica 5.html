@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://soft0.upc.edu/dat/prac-forums-spa/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5_files/bootstrap.4.1.3.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5_files/style-4.css">
+
+  <title>DAT. Pràctica 5</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/index.html">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-maq-expr/index.html">Pràctica 1</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Pràctica 5</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+  <nav class="nav sticky-top navbar-light bg-light nav-pills flex-column">
+    <a class="nav-link active" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Introducció</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/frontend.html">Frontend</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html">Servei de fòrums (API REST)</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/canvis-frontend.html">Canvis</a>
+  </nav>
+</div>
+
+<div class="col-md-2 order-last">
+  <nav class="nav sticky-top navbar-light bg-light flex-column">
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html#intro">Objectius</a>
+    <!--a class="nav-link" href="#angularjs">AngularJS</a-->
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html#arquitectura">Arquitectura</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html#codi">Codi a completar</a>
+  </nav>
+</div>
+
+<div class="col-md-8">
+<h1>Pràctica 5: <em>Single Page Application</em></h1>
+
+<h2 id="intro">Objectius</h2>
+
+<p>En la pràctica 5 s'haurà de realitzar una aplicació SPA (<em>Single Page Application</em>) que interaccioni amb un
+  servei WEB amb estil <a href="http://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>
+  ofert per un servidor de fòrums.</p>
+
+<p>La funcionalitat oferta per aquesta aplicació serà molt similar a la que ofereix la pràctica anterior de fòrums,
+ però amb una implementació molt diferent:
+ <strong>Tota la presentació i interacció amb l'usuari és tractada localment en el client (navegador)</strong>.</p>
+
+<p>Per a realitzar aquesta pràctica utilitzareu
+ <a href="https://hackage-content.haskell.org/package/miso-1.9.0.0">miso (versió 1.9)</a>,
+ un <em>framework</em> per al desenvolupament en Haskell d'aplicacions de costat client (<em>SPA</em>).</p>
+
+
+<!--
+<a name="angularjs"></a>
+<h2>¿Qué es AngularJS?</h2>
+
+<p><a href="http://www.angularjs.org/" target="_blank"><strong>AngularJS</strong></a> es un impresionante framework javascript <em>opensource</em>
+ desarrollado por <a href="http://www.google.com/" target="_blank">Google</a>.
+ Un framework para crear Webapps en lenguaje cliente con Javascript ejecutándose con el conocido
+ <a href="http://en.wikipedia.org/wiki/Single-page_application" target="_blank">single-page applications</a> (aplicación de una sóla página)
+ que extiende el tradicional HTML con etiquetas propias (directivas) como pueden ser <em>ng-app, ng-controller, ng-model, ng-view, &#8230;</em></p>
+
+<p>Un framework basado en <strong>MVC (Modelo-Vista-Controlador)</strong> increíblemente flexible, de muy fácil lectura y desarrollo rápido (puedes empezar en minutos).</p>
+
+<p>Permite <strong>extender HTML</strong> con tags personalizados, definir y vincular (<strong>data-binding</strong>) variables vista/controllador,
+ consultas <strong>ajax</strong> con peticiones HTTP, sistema óptimo de plantillas (<strong>templating</strong>), manipulación de datos en <strong>JSON</strong>,
+ inyección de dependencias, validación de formularios, desacoplamiento del DOM de Javascript, internacionalización i18n y l10n, filtros, &#8230;</p>
+
+<p><a href="http://www.angularjs.org/" target="_blank">AngularJS</a> es <strong>compatible con los navegadores de última generación</strong>
+ (Chrome, Firefox, Safari, Opera, Webkits, IE9+) y se puede hacer compatible para Internet Explorer 8 o anterior mediante varios hacks.</p>
+-->
+
+
+<a name="arquitectura"></a>
+<h2>Arquitectura de la aplicación</h2>
+
+<!--div class="alert alert-info" role="alert">EN PREPARACIÓN</div-->
+
+<p>El siguiente diagrama muestra como interactúan las distintas partes de que se compone la aplicación
+de esta práctica.</p>
+
+<figure>
+  <img src="./DAT. Pràctica 5_files/diagram.png" alt="Parts i interaccions de l&#39;aplicació" class="img-thumbnail">
+  <figcaption>Parts i interaccions de l'aplicació</figcaption>
+</figure>
+
+<p>Cal distingir els fluxos d'interacció següents:</p>
+<ol>
+  <li> <!-- 1 -->
+    <p>L'usuari visita l'URL <code>http://localhost:8008/index.html</code> corresponent a la pàgina principal
+     del <em>frontend</em> de l'aplicació (Static URLs).</p>
+    <p>Aquesta pàgina i el codi <em>javascript</em> del <em>frontend</em> és el contingut estàtic obtingut
+     a partir de la compilació de l'aplicació SPA realitzada amb <em>Haskell</em>.</p>
+    <p>Un cop carregada la pàgina principal i els continguts relacionats, s'executa el codi del <em>frontend</em>.</p>
+  </li>
+  <li> <!-- 2 -->
+    <p>El <em>frontend</em> interactua amb l'API REST ofert pel <em>backend</em> (API URLs).
+     En les interaccions directes entre el JS del <em>frontend</em> i el <em>backend</em>,
+     els continguts transferits són JSON.</p>
+  </li>
+  <li> <!-- 3 -->
+    <p>Quan l'usuari necessiti autenticar-se haurà de visitar, des de la pàgina HTML,
+     l'enllaç a la URL del servei d'autenticació (Auth URLs).
+     Aquest servei ofereix al navegador una interfície HTML clàssica.</p>
+    <p>El servei d'autenticació del <em>backend</em> emmagatzema la URL de retorn (la pàgina que conté l'enllaç).
+     Aquesta URL s'obté del paràmetre <code>redirect_url</code> de la petició HTTP desencadenada per la visita a
+     l'enllaç.</p>
+  </li>
+  <li> <!-- 4 -->
+    <p>Un cop autenticat l'usuari, el <em>backend</em> registra l'identificador de l'usuari a la sessió
+     amb el navegador i redirigeix ​​el navegador a la URL del <em>frontend</em> (emmagatzemada al pas anterior).</p>
+    <p>El manteniment de la sessió entre el navegador i el <em>backend</em> es realitza mitjançant
+     <em>cookies</em> que seran incloses de forma implícita en cadascuna de les peticions que el navegador
+     faci al <em>backend</em>.</p>
+  </li>
+  <li> <!-- 5 -->
+    <p>Un cop recarregat el <em>frontend</em> i executat de nou, tornarà a interactuar amb l'API REST
+     (accedint a les API URLs).
+     Ara, en canvi, a la sessió estarà inclòs l'identificador de l'usuari autenticat.</p>
+  </li>
+</ol>
+
+
+<h2 id="codi">Codi a completar</h2>
+
+<p>L'arxiu <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5.zip">[<em>dat-prj-5.zip</em>]</a> proveït pel professor
+conté el directori de projecte <code>cabal</code> amb el codi de l'aplicació a completar per l'estudiant.</p>
+
+<p>Projecte <code>cabal</code> de la pràctica 5:</p>
+<ul>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5.zip"><em>dat-prj-5.zip</em></a></li>
+  <li>Navega pel contingut del <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5">projecte</a>.</li>
+</ul>
+
+<p>L'aplicació a realitzar és una SPA que es comportarà com un client del servidor de fòrums
+<code>http://localhost:5001</code>.</p>
+
+
+</div><!-- col-md -->
+
+</div><!-- row-->
+</div><!-- container-->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga, Maig 2026</span>
+  </div>
+</footer>
+
+
+
+</body></html>
