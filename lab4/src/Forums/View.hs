@@ -41,6 +41,10 @@ pidPostedWidget pid = do
     mbpost <- runDbAction $ getPost pid
     maybe "???" (dateWidget . pdPosted) mbpost
 
+canModerateForum :: Maybe (UserId, UserD) -> ForumD -> Bool
+canModerateForum (Just (uid, _)) forum = uid == fdModeratorId forum
+canModerateForum Nothing _ = False
+
 
 -- ---------------------------------------------------------------
 -- Views
@@ -51,10 +55,15 @@ homeView mbuser fformw = do
     forums <- runDbAction getForumList
     $(widgetTemplFile $ templatesDir <> "/home.html")
 
-forumView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> WidgetFor ForumsApp ()
-forumView mbuser (fid, forum) = do
+forumView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> Widget ForumsApp -> Widget ForumsApp -> WidgetFor ForumsApp ()
+forumView mbuser (fid, forum) tformw eformw = do
     topics <- runDbAction $ getTopicList fid
     $(widgetTemplFile $ templatesDir <> "/forum.html")
+
+topicView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> (TopicId, TopicD) -> Widget ForumsApp -> WidgetFor ForumsApp ()
+topicView mbuser (fid, forum) (tid, topic) rformw = do
+    posts <- runDbAction $ getPostList tid
+    $(widgetTemplFile $ templatesDir <> "/topic.html")
 
 
 loginView :: Widget ForumsApp -> Widget ForumsApp
@@ -71,4 +80,3 @@ appLayout wdgt = do
     mbmsg <- getMessage
     mbuser <- fmap (fmap snd) maybeAuth
     applyUrlRenderTo $(htmlTemplFile $ templatesDir <> "/default-layout.html")
-

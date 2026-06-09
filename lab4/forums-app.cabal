@@ -12,6 +12,7 @@ tested-with:
 
 executable forums-app
   main-is: Main.hs
+  ghc-options: -threaded
   other-modules:
       Forums.App
       Forums.Config
@@ -43,4 +44,3 @@ executable forums-app
     , wai >=3.0
     , warp
   default-language: Haskell2010
-
