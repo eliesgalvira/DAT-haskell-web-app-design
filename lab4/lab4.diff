@@ -1,0 +1,375 @@
+diff --git a/lab4/forums-app.cabal b/lab4/forums-app.cabal
+index aa2bfb4..d3078cb 100644
+--- a/lab4/forums-app.cabal
++++ b/lab4/forums-app.cabal
+@@ -12,6 +12,7 @@ tested-with:
+ 
+ executable forums-app
+   main-is: Main.hs
++  ghc-options: -threaded
+   other-modules:
+       Forums.App
+       Forums.Config
+@@ -43,4 +44,3 @@ executable forums-app
+     , wai >=3.0
+     , warp
+   default-language: Haskell2010
+-
+diff --git a/lab4/src/Forums/Handler.hs b/lab4/src/Forums/Handler.hs
+index 53537c2..ec83782 100644
+--- a/lab4/src/Forums/Handler.hs
++++ b/lab4/src/Forums/Handler.hs
+@@ -15,6 +15,13 @@ import Data.Text as T
+ 
+ -- ---------------------------------------------------------------
+ 
++titleField :: Field (HandlerFor ForumsApp) Text
++titleField = check
++        (\ t -> if T.length t < minTitleLen then Left "Text massa curt"
++                else if T.length t > maxTitleLen then Left "Text massa llarg"
++                else Right t)
++        textField
++
+ markdownField :: Field (HandlerFor ForumsApp) Markdown
+ markdownField = checkMap
+         (\ t -> if T.length t < minPostLen then Left "Text massa curt"
+@@ -28,7 +35,7 @@ markdownField = checkMap
+ 
+ newForumForm :: AForm (HandlerFor ForumsApp) NewForum
+ newForumForm =
+-    NewForum <$> freq textField (withPlaceholder "Introduiu el títol del fòrum" "Titol") Nothing
++    NewForum <$> freq titleField (withPlaceholder "Introduiu el títol del fòrum" "Titol") Nothing
+              <*> freq markdownField (withPlaceholder "Introduiu la descripció del fòrum" "Descripció") Nothing
+ 
+ getHomeR :: HandlerFor ForumsApp Html
+@@ -54,31 +61,123 @@ postHomeR = do
+ -- ---------------------------------------------------------------
+ -- Controller handlers: Forum
+ 
++newTopicForm :: AForm (HandlerFor ForumsApp) NewTopic
++newTopicForm =
++    NewTopic <$> freq titleField (withPlaceholder "Introduiu l'assumpte de la pregunta" "Assumpte") Nothing
++             <*> freq markdownField (withPlaceholder "Introduiu el contingut de la pregunta" "Contingut") Nothing
++
++editForumForm :: ForumD -> AForm (HandlerFor ForumsApp) NewForum
++editForumForm forum =
++    NewForum <$> freq titleField "Titol" (Just $ fdTitle forum)
++             <*> freq markdownField "Descripció" (Just $ fdDescription forum)
++
+ getForumR :: ForumId -> HandlerFor ForumsApp Html
+ getForumR fid = do
+     -- Get requested forum from data-base.
+     -- Short-circuit (responds immediately) with a 'Not found' status if forum don't exist
+     forum <- runDbAction (getForum fid) >>= maybe notFound pure
+     mbuser <- maybeAuth
+-    -- Other processing (forms, ...)
+-    -- ... A completar per l'estudiant
++    tformw <- generateAFormPost newTopicForm
++    eformw <- generateAFormPost $ editForumForm forum
+     -- Return HTML content
+-    appLayout $ forumView mbuser (fid, forum)
++    appLayout $ forumView mbuser (fid, forum) tformw eformw
+ 
+ postForumR :: ForumId -> HandlerFor ForumsApp Html
+ postForumR fid = do
+-    fail "A completar per l'estudiant"
++    forum <- runDbAction (getForum fid) >>= maybe notFound pure
++    mbaction <- lookupPostParam "action"
++    case mbaction of
++        Just "new-topic" -> do
++            user <- requireAuth
++            (tformr, tformw) <- runAFormPost newTopicForm
++            eformw <- generateAFormPost $ editForumForm forum
++            case tformr of
++                FormSuccess newtopic -> do
++                    (tid, _) <- runDbAction $ addTopic fid (fst user) newtopic
++                    redirect $ TopicR tid
++                _ ->
++                    appLayout $ forumView (Just user) (fid, forum) tformw eformw
++        Just "edit-forum" -> do
++            user <- requireAuth
++            requireForumModerator user forum
++            tformw <- generateAFormPost newTopicForm
++            (eformr, eformw) <- runAFormPost $ editForumForm forum
++            case eformr of
++                FormSuccess newforum -> do
++                    runDbAction $ editForum fid (nfTitle newforum) (nfDescription newforum)
++                    redirect $ ForumR fid
++                _ ->
++                    appLayout $ forumView (Just user) (fid, forum) tformw eformw
++        Just "delete-topic" -> do
++            user <- requireAuth
++            requireForumModerator user forum
++            mbtid <- lookupPostParam "topic"
++            case mbtid >>= fromPathPiece of
++                Just tid -> do
++                    topic <- runDbAction (getTopic tid) >>= maybe notFound pure
++                    if tdForumId topic == fid
++                        then runDbAction (deleteTopic fid tid) >> redirect (ForumR fid)
++                        else notFound
++                Nothing ->
++                    notFound
++        Just "delete-forum" -> do
++            user <- requireAuth
++            requireForumModerator user forum
++            runDbAction $ deleteForum fid
++            redirect HomeR
++        _ ->
++            redirect $ ForumR fid
+ 
+ -- ---------------------------------------------------------------
+ -- Controller handlers: Topic
+ 
++replyForm :: AForm (HandlerFor ForumsApp) Markdown
++replyForm =
++    freq markdownField (withPlaceholder "Introduiu la resposta" "Resposta") Nothing
++
+ getTopicR :: TopicId -> HandlerFor ForumsApp Html
+ getTopicR tid = do
+-    fail "A completar per l'estudiant"
++    topic <- runDbAction (getTopic tid) >>= maybe notFound pure
++    forum <- runDbAction (getForum $ tdForumId topic) >>= maybe notFound pure
++    mbuser <- maybeAuth
++    rformw <- generateAFormPost replyForm
++    appLayout $ topicView mbuser (tdForumId topic, forum) (tid, topic) rformw
+ 
+ postTopicR :: TopicId -> HandlerFor ForumsApp Html
+ postTopicR tid = do
+-    fail "A completar per l'estudiant"
++    topic <- runDbAction (getTopic tid) >>= maybe notFound pure
++    forum <- runDbAction (getForum $ tdForumId topic) >>= maybe notFound pure
++    mbaction <- lookupPostParam "action"
++    case mbaction of
++        Just "reply" -> do
++            user <- requireAuth
++            (rformr, rformw) <- runAFormPost replyForm
++            case rformr of
++                FormSuccess message -> do
++                    runDbAction $ addReply (tdForumId topic) tid (fst user) message
++                    redirect $ TopicR tid
++                _ ->
++                    appLayout $ topicView (Just user) (tdForumId topic, forum) (tid, topic) rformw
++        Just "delete-post" -> do
++            user <- requireAuth
++            requireForumModerator user forum
++            mbpid <- lookupPostParam "post"
++            case mbpid >>= fromPathPiece of
++                Just pid -> do
++                    post <- runDbAction (getPost pid) >>= maybe notFound pure
++                    if pdTopicId post == tid
++                        then runDbAction (deletePost (tdForumId topic) tid pid) >> redirect (TopicR tid)
++                        else notFound
++                Nothing ->
++                    notFound
++        _ ->
++            redirect $ TopicR tid
++
++requireForumModerator :: (UserId, UserD) -> ForumD -> HandlerFor ForumsApp ()
++requireForumModerator (uid, _) forum =
++    if uid == fdModeratorId forum
++        then pure ()
++        else permissionDenied "Nomes el moderador pot fer aquesta accio"
+ 
+ 
+ -- ---------------------------------------------------------------
+@@ -127,4 +226,3 @@ handleLogoutR = do
+     setUltDestReferer
+     deleteSession authId_SESSION_KEY
+     redirectUltDest HomeR
+-
+diff --git a/lab4/src/Forums/View.hs b/lab4/src/Forums/View.hs
+index 9815c7d..c3a1ff8 100644
+--- a/lab4/src/Forums/View.hs
++++ b/lab4/src/Forums/View.hs
+@@ -41,6 +41,10 @@ pidPostedWidget pid = do
+     mbpost <- runDbAction $ getPost pid
+     maybe "???" (dateWidget . pdPosted) mbpost
+ 
++canModerateForum :: Maybe (UserId, UserD) -> ForumD -> Bool
++canModerateForum (Just (uid, _)) forum = uid == fdModeratorId forum
++canModerateForum Nothing _ = False
++
+ 
+ -- ---------------------------------------------------------------
+ -- Views
+@@ -51,11 +55,16 @@ homeView mbuser fformw = do
+     forums <- runDbAction getForumList
+     $(widgetTemplFile $ templatesDir <> "/home.html")
+ 
+-forumView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> WidgetFor ForumsApp ()
+-forumView mbuser (fid, forum) = do
++forumView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> Widget ForumsApp -> Widget ForumsApp -> WidgetFor ForumsApp ()
++forumView mbuser (fid, forum) tformw eformw = do
+     topics <- runDbAction $ getTopicList fid
+     $(widgetTemplFile $ templatesDir <> "/forum.html")
+ 
++topicView :: Maybe (UserId, UserD) -> (ForumId, ForumD) -> (TopicId, TopicD) -> Widget ForumsApp -> WidgetFor ForumsApp ()
++topicView mbuser (fid, forum) (tid, topic) rformw = do
++    posts <- runDbAction $ getPostList tid
++    $(widgetTemplFile $ templatesDir <> "/topic.html")
++
+ 
+ loginView :: Widget ForumsApp -> Widget ForumsApp
+ loginView formw =
+@@ -71,4 +80,3 @@ appLayout wdgt = do
+     mbmsg <- getMessage
+     mbuser <- fmap (fmap snd) maybeAuth
+     applyUrlRenderTo $(htmlTemplFile $ templatesDir <> "/default-layout.html")
+-
+diff --git a/lab4/templates/forum.html b/lab4/templates/forum.html
+index f8095c7..f0b2596 100644
+--- a/lab4/templates/forum.html
++++ b/lab4/templates/forum.html
+@@ -1,8 +1,5 @@
+ 
+-<h1>Plantilla templates/forum.html (A completar per l'estudiant)</h2>
+-
+-<h4>Esbós de com mostrar un fòrum amb la llista de topics
+- (veieu com es defineixen les variables <code>forum</code> i <code>topics</code> en el corresponent handler)</h4>
++<h1>#{ fdTitle forum }</h1>
+ 
+ <p><a href="@{HomeR}">Torna a la pàgina principal</a></p>
+ 
+@@ -21,9 +18,22 @@
+ 
+ <div class="bg-light">#{ fdDescription forum }</div>
+ 
+-<p>Topics:</p>
++$if{ canModerateForum mbuser forum }
++  <h3>Edita el fòrum</h3>
++  <form role="form" method="POST" action="@{ForumR fid}">
++    <input type="hidden" name="action" value="edit-forum">
++    ^{eformw}
++    <button type="submit" class="btn btn-primary">Desa canvis</button>
++  </form>
++  <form role="form" method="POST" action="@{ForumR fid}">
++    <input type="hidden" name="action" value="delete-forum">
++    <button type="submit" class="btn btn-danger">Elimina el fòrum</button>
++  </form>
++$end
++
++<h3>Topics</h3>
+ <table class="table table-striped table-condensed">
+-  <thead><tr><th>Qüestió</th><th>Per / Iniciada</th><th>Posts</th><th>Última activitat</th></tr></thead>
++  <thead><tr><th>Qüestió</th><th>Per / Iniciada</th><th>Posts</th><th>Última activitat</th><th></th></tr></thead>
+   <tbody>
+     $forall{ (tid, topic) <- topics }
+       <tr>
+@@ -31,12 +41,25 @@
+         <td>^{ uidNameWidget (tdUserId topic) } / <span class="small">^{ dateWidget (tdStarted topic) }</span></td>
+         <td>#{ tdPostCount topic }</td>
+         <td>$maybe{ lastpid <- tdLastPostId topic } ^{pidPostedWidget lastpid} $end </td>
++        <td>
++          $if{ canModerateForum mbuser forum }
++            <form role="form" method="POST" action="@{ForumR fid}">
++              <input type="hidden" name="action" value="delete-topic">
++              <input type="hidden" name="topic" value="#{toPathPiece tid}">
++              <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
++            </form>
++          $end
++        </td>
+       </tr>
+     $end
+   </tbody>
+ </table>
+ 
+ $if{ isJust mbuser }
+-  <h4>Formulari per a introdüir una nova pregunta (topic + post) ...</h4>
++  <h3>Nova pregunta</h3>
++  <form role="form" method="POST" action="@{ForumR fid}">
++    <input type="hidden" name="action" value="new-topic">
++    ^{tformw}
++    <button type="submit" class="btn btn-success">Publica la pregunta</button>
++  </form>
+ $end
+-
+diff --git a/lab4/templates/home.html b/lab4/templates/home.html
+index 6868aa8..39af935 100644
+--- a/lab4/templates/home.html
++++ b/lab4/templates/home.html
+@@ -1,7 +1,5 @@
+ 
+-<h1>Plantilla templates/home.html (A completar per l'estudiant)</h2>
+-
+-<h4>Esbós de com mostrar la llista de fòrums (veieu com es defineix la variable <code>forums</code> en el corresponent handler)</h4>
++<h1>Fòrums</h1>
+ 
+ <table class="table table-striped table-condensed">
+   <thead><tr><th>Categoria</th><th>Títol</th><th>Moderador</th><th>Creat</th><th>Topics</th><th>Posts</th><th>Última activitat</tH></tr></thead>
+@@ -20,15 +18,15 @@
+ </table>
+ 
+ $if{ isJust mbuser }
+-<h4>Esbós de formulari per crear un fòrum nou (veieu com es defineix la variable <code>fformw</code> en el corresponent handler)</h4>
++<h3>Nou fòrum</h3>
+ <div class="row">
+   <div class="col-sm-2"></div>
+   <div class="col-sm-10">
+     <form role="form" method="POST" action="@{HomeR}">
++      <input type="hidden" name="action" value="new-forum">
+       ^{fformw}
+       <button type="submit" class="btn btn-success">Nou fòrum</button>
+     </form>
+   </div>
+ </div>
+ $end
+-
+
+diff --git a/lab4/templates/topic.html b/lab4/templates/topic.html
+new file mode 100644
+index 0000000..a3500aa
+--- /dev/null
++++ b/lab4/templates/topic.html
+@@ -0,0 +1,52 @@
++<h1>#{ tdSubject topic }</h1>
++
++<p><a href="@{ForumR fid}">Torna al fòrum</a></p>
++
++<table class="table table-striped table-condensed">
++  <tbody>
++    <tr>
++      <th>Fòrum</th>
++      <td>#{ fdTitle forum }</td>
++    </tr>
++    <tr>
++      <th>Pregunta feta per</th>
++      <td>^{ uidNameWidget (tdUserId topic) }</td>
++    </tr>
++    <tr>
++      <th>Data</th>
++      <td>^{ dateWidget (tdStarted topic) }</td>
++    </tr>
++    <tr>
++      <th>Posts</th>
++      <td>#{ tdPostCount topic }</td>
++    </tr>
++  </tbody>
++</table>
++
++<h3>Missatges</h3>
++
++$forall{ (pid, post) <- posts }
++  <div class="border rounded p-3 mb-3">
++    <p>
++      <strong>^{ uidNameWidget (pdUserId post) }</strong>
++      <span class="small">^{ dateWidget (pdPosted post) }</span>
++    </p>
++    <div>#{ pdMessage post }</div>
++    $if{ canModerateForum mbuser forum }
++      <form role="form" method="POST" action="@{TopicR tid}">
++        <input type="hidden" name="action" value="delete-post">
++        <input type="hidden" name="post" value="#{toPathPiece pid}">
++        <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
++      </form>
++    $end
++  </div>
++$end
++
++$if{ isJust mbuser }
++  <h3>Nova resposta</h3>
++  <form role="form" method="POST" action="@{TopicR tid}">
++    <input type="hidden" name="action" value="reply">
++    ^{rformw}
++    <button type="submit" class="btn btn-success">Publica la resposta</button>
++  </form>
++$end

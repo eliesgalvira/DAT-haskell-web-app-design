@@ -1,0 +1,52 @@
+<h1>#{ tdSubject topic }</h1>
+
+<p><a href="@{ForumR fid}">Torna al fòrum</a></p>
+
+<table class="table table-striped table-condensed">
+  <tbody>
+    <tr>
+      <th>Fòrum</th>
+      <td>#{ fdTitle forum }</td>
+    </tr>
+    <tr>
+      <th>Pregunta feta per</th>
+      <td>^{ uidNameWidget (tdUserId topic) }</td>
+    </tr>
+    <tr>
+      <th>Data</th>
+      <td>^{ dateWidget (tdStarted topic) }</td>
+    </tr>
+    <tr>
+      <th>Posts</th>
+      <td>#{ tdPostCount topic }</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Missatges</h3>
+
+$forall{ (pid, post) <- posts }
+  <div class="border rounded p-3 mb-3">
+    <p>
+      <strong>^{ uidNameWidget (pdUserId post) }</strong>
+      <span class="small">^{ dateWidget (pdPosted post) }</span>
+    </p>
+    <div>#{ pdMessage post }</div>
+    $if{ canModerateForum mbuser forum }
+      <form role="form" method="POST" action="@{TopicR tid}">
+        <input type="hidden" name="action" value="delete-post">
+        <input type="hidden" name="post" value="#{toPathPiece pid}">
+        <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
+      </form>
+    $end
+  </div>
+$end
+
+$if{ isJust mbuser }
+  <h3>Nova resposta</h3>
+  <form role="form" method="POST" action="@{TopicR tid}">
+    <input type="hidden" name="action" value="reply">
+    ^{rformw}
+    <button type="submit" class="btn btn-success">Publica la resposta</button>
+  </form>
+$end
