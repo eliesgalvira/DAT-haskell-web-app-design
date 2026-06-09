@@ -10,6 +10,8 @@ cradle:
       component: "wai-intro:exe:hello-1"
     - path: "./web-handler/hello-2.hs"
       component: "web-handler:exe:hello-2"
+    - path: "./web-handler/game.hs"
+      component: "web-handler:exe:game"
     - path: "./web-handler/Handler.hs"
       component: "web-handler:lib"
     - path: "./web-handler/Handler_T1.hs"

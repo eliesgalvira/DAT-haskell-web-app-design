@@ -1,0 +1,363 @@
+diff --git original/lab3/hie.yaml solution/lab3/hie.yaml
+new file mode 100644
+index 0000000..ab0b22c
+--- /dev/null
++++ solution/lab3/hie.yaml
+@@ -0,0 +1,20 @@
++cradle:
++  stack:
++    - path: "./wai-intro/holamon.hs"
++      component: "wai-intro:exe:holamon"
++    - path: "./wai-intro/acumulador0.hs"
++      component: "wai-intro:exe:acumulador0"
++    - path: "./wai-intro/acumulador.hs"
++      component: "wai-intro:exe:acumulador"
++    - path: "./wai-intro/hello-1.hs"
++      component: "wai-intro:exe:hello-1"
++    - path: "./web-handler/hello-2.hs"
++      component: "web-handler:exe:hello-2"
++    - path: "./web-handler/game.hs"
++      component: "web-handler:exe:game"
++    - path: "./web-handler/Handler.hs"
++      component: "web-handler:lib"
++    - path: "./web-handler/Handler_T1.hs"
++      component: "web-handler:lib"
++    - path: "./web-handler/Handler_T2.hs"
++      component: "web-handler:lib"
+diff --git original/lab3/web-handler/Handler.hs solution/lab3/web-handler/Handler.hs
+index ae4c6ac..df6458d 100644
+--- original/lab3/web-handler/Handler.hs
++++ solution/lab3/web-handler/Handler.hs
+@@ -65,19 +65,18 @@ instance Applicative Handler where
+     -- tipus en aquesta instancia:
+     --      pure  :: a -> Handler a
+     --      (<*>) :: Handler (a -> b) -> Handler a -> Handler b
+-    pure x =
+-        -- (A completar per l'estudiant)
+-        ...
+-    hf <*> hx =
+-        -- (A completar per l'estudiant)
+-        ...
++    pure x = HandlerC $ \ _ st0 -> pure (x, st0)
++    hf <*> hx = HandlerC $ \ req st0 -> do
++        (f, st1) <- runHandler hf req st0
++        (x, st2) <- runHandler hx req st1
++        pure (f x, st2)
+ 
+ instance Monad Handler where
+     -- tipus en aquesta instancia:
+     --      (>>=) :: Handler a -> (a -> Handler b) -> Handler b
+-    hx >>= k =
+-        -- (A completar per l'estudiant)
+-        ...
++    hx >>= k = HandlerC $ \ req st0 -> do
++        (x, st1) <- runHandler hx req st0
++        runHandler (k x) req st1
+ 
+ -- class MonadIO: Monads in which IO computations may be embedded.
+ -- The method 'liftIO' lifts a computation from the IO monad.
+@@ -99,15 +98,11 @@ asksRequest f = HandlerC $ \ req st0 ->
+ 
+ -- Obte informació de l'estat del handler
+ getsHandlerState :: (HandlerState -> a) -> Handler a
+-getsHandlerState f =
+-    -- (A completar per l'estudiant)
+-    ...
++getsHandlerState f = HandlerC $ \ _ st0 -> pure (f st0, st0)
+ 
+ -- Modifica l'estat del handler
+ modifyHandlerState :: (HandlerState -> HandlerState) -> Handler ()
+-modifyHandlerState f =
+-    -- (A completar per l'estudiant)
+-    ...
++modifyHandlerState f = HandlerC $ \ _ st0 -> pure ((), f st0)
+ 
+ -- ****************************************************************
+ 
+@@ -219,8 +214,7 @@ lookupPostParams name = do
+             --   fst :: (a, b) -> a
+             --   snd :: (a, b) -> b
+             --   filter :: (a -> Bool) -> [a] -> [a]
+-            -- (A completar per l'estudiant)
+-            ...
++            pure $ snd <$> filter ((name ==) . fst) params
+         Nothing ->
+             -- El contingut de la peticio no es un formulari. No hi ha valors.
+             pure []
+@@ -283,4 +277,3 @@ getAllBody req = do
+     else do
+         bs <- getAllBody req
+         pure $ b <> bs
+-
+diff --git original/lab3/web-handler/Handler_T1.hs solution/lab3/web-handler/Handler_T1.hs
+index afda3e1..7f4f0f5 100644
+--- original/lab3/web-handler/Handler_T1.hs
++++ solution/lab3/web-handler/Handler_T1.hs
+@@ -37,12 +37,10 @@ import           Text.Read (readMaybe)
+ -- El context d'un Handler compren:
+ --      L'argument Request que permet obtenir informacio sobre la peticio.
+ --      L'estat del Handler (argument i resultat de les operacions).
+-type Handler = ReaderT Request (StateT HandlerState IO)
++type Handler = ReaderT W.Request (StateT HandlerState IO)
+ 
+ runHandler :: Handler a -> W.Request -> HandlerState -> IO (a, HandlerState)
+-runHandler m r s0 =
+-    -- (A completar per l'estudiant)
+-    ...
++runHandler m r s0 = runStateT (runReaderT m r) s0
+ 
+ 
+ -- HandlerState compren:
+@@ -64,21 +62,15 @@ hsSetSession s (HandlerStateC q _) = HandlerStateC q s
+ 
+ -- Obte informació de la peticio
+ asksRequest :: (W.Request -> a) -> Handler a
+-asksRequest =
+-    -- (A completar per l'estudiant)
+-    ...
++asksRequest = asks
+ 
+ -- Obte informació de l'estat del handler
+ getsHandlerState :: (HandlerState -> a) -> Handler a
+-getsHandlerState =
+-    -- (A completar per l'estudiant)
+-    ...
++getsHandlerState = gets
+ 
+ -- Modifica l'estat del handler
+ modifyHandlerState :: (HandlerState -> HandlerState) -> Handler ()
+-modifyHandlerState =
+-    -- (A completar per l'estudiant)
+-    ...
++modifyHandlerState = modify
+ 
+ -- ****************************************************************
+ 
+@@ -190,8 +182,7 @@ lookupPostParams name = do
+             --   fst :: (a, b) -> a
+             --   snd :: (a, b) -> b
+             --   filter :: (a -> Bool) -> [a] -> [a]
+-            -- (A completar per l'estudiant)
+-            ...
++            pure $ snd <$> filter ((name ==) . fst) params
+         Nothing ->
+             -- El contingut de la peticio no es un formulari. No hi ha valors.
+             pure []
+@@ -254,4 +245,3 @@ getAllBody req = do
+     else do
+         bs <- getAllBody req
+         pure $ b <> bs
+-
+diff --git original/lab3/web-handler/Handler_T2.hs solution/lab3/web-handler/Handler_T2.hs
+index de9bd25..4110202 100644
+--- original/lab3/web-handler/Handler_T2.hs
++++ solution/lab3/web-handler/Handler_T2.hs
+@@ -38,13 +38,11 @@ import           Text.Read (readMaybe)
+ -- El context d'un Handler compren:
+ --      L'argument Request que permet obtenir informacio sobre la peticio.
+ --      L'estat del Handler (argument i resultat de les operacions).
+-newtype Handler a = HandlerC (ReaderT Request (StateT HandlerState IO) a)
++newtype Handler a = HandlerC (ReaderT W.Request (StateT HandlerState IO) a)
+     deriving (Functor, Applicative, Monad, MonadIO)
+ 
+ runHandler :: Handler a -> W.Request -> HandlerState -> IO (a, HandlerState)
+-runHandler (HandlerC m) r s0 =
+-    -- (A completar per l'estudiant)
+-    ...
++runHandler (HandlerC m) r s0 = runStateT (runReaderT m r) s0
+ 
+ 
+ -- HandlerState compren:
+@@ -66,21 +64,15 @@ hsSetSession s (HandlerStateC q _) = HandlerStateC q s
+ 
+ -- Obte informació de la peticio
+ asksRequest :: (W.Request -> a) -> Handler a
+-asksRequest f =
+-    -- (A completar per l'estudiant)
+-    ...
++asksRequest f = HandlerC $ asks f
+ 
+ -- Obte informació de l'estat del handler
+ getsHandlerState :: (HandlerState -> a) -> Handler a
+-getsHandlerState f =
+-    -- (A completar per l'estudiant)
+-    ...
++getsHandlerState f = HandlerC $ lift $ gets f
+ 
+ -- Modifica l'estat del handler
+ modifyHandlerState :: (HandlerState -> HandlerState) -> Handler ()
+-modifyHandlerState f =
+-    -- (A completar per l'estudiant)
+-    ...
++modifyHandlerState f = HandlerC $ lift $ modify f
+ 
+ -- ****************************************************************
+ 
+@@ -192,8 +184,7 @@ lookupPostParams name = do
+             --   fst :: (a, b) -> a
+             --   snd :: (a, b) -> b
+             --   filter :: (a -> Bool) -> [a] -> [a]
+-            -- (A completar per l'estudiant)
+-            ...
++            pure $ snd <$> filter ((name ==) . fst) params
+         Nothing ->
+             -- El contingut de la peticio no es un formulari. No hi ha valors.
+             pure []
+@@ -256,4 +247,3 @@ getAllBody req = do
+     else do
+         bs <- getAllBody req
+         pure $ b <> bs
+-
+diff --git original/lab3/web-handler/game.hs solution/lab3/web-handler/game.hs
+new file mode 100644
+index 0000000..a698855
+--- /dev/null
++++ solution/lab3/web-handler/game.hs
+@@ -0,0 +1,90 @@
++{-# LANGUAGE OverloadedStrings #-}
++
++module Main
++where
++import           Network.Wai.Handler.Warp (runEnv)
++
++import           Handler
++
++import           Data.Text (Text)
++import qualified Data.Text as T
++
++import qualified Text.Blaze.Html5 as H
++import qualified Text.Blaze.Html5.Attributes as A
++
++-- ****************************************************************
++
++main :: IO ()
++main = do
++    -- runEnv :: Port -> Application -> IO ()
++    runEnv 4050 $ dispatchHandler gameApp
++
++-- ****************************************************************
++-- Controller
++
++gameApp :: Handler HandlerResponse
++gameApp = onMethod
++    [ ("GET", doGet)
++    , ("POST", doPost)
++    ]
++
++doGet :: Handler HandlerResponse
++doGet = do
++    mbGame <- getSession "playState"
++    let game = case mbGame of
++            Just g -> g
++            Nothing -> startState
++    respHtml $ htmlView game
++
++doPost :: Handler HandlerResponse
++doPost = do
++    mbGame <- getSession "playState"
++    mbPlayText <- lookupPostParam "playText"
++    let game = case mbGame of
++            Just g -> g
++            Nothing -> startState
++        newGame = case mbPlayText of
++            Just t -> playText t game
++            Nothing -> game
++    setSession "playState" newGame
++    respRedirect "#"
++
++-- ****************************************************************
++-- View
++
++htmlView :: GameState -> H.Html
++htmlView game =
++    H.docTypeHtml $ do
++        H.head $
++            H.title "A simple game ..."
++        H.body $ do
++            H.h1 $ H.text $ "Game state: " <> T.pack (show game)
++            H.hr
++            H.form H.! A.method "POST" H.! A.action "#" $ do
++                H.p $ do
++                    H.span "String to play:"
++                    H.input H.! A.name "playText"
++                H.input H.! A.type_ "submit" H.! A.name "ok" H.! A.value "Play"
++
++-- ****************************************************************
++-- Model
++
++-- Tipus de l'estat
++type GameState = (Bool, Int)
++
++startState :: GameState
++startState = (False, 0)
++
++playChar :: Char -> GameState -> GameState
++playChar '*' (enabled, score) = (not enabled, score)
++playChar '+' (True, score) = (True, score + 1)
++playChar '-' (True, score) = (True, score - 1)
++playChar _ game = game
++
++playString :: String -> GameState -> GameState
++playString [] game = game
++playString (c : cs) game =
++    playString cs (playChar c game)
++
++playText :: Text -> GameState -> GameState
++playText t = playString (T.unpack t)
+diff --git original/lab3/web-handler/web-handler.cabal solution/lab3/web-handler/web-handler.cabal
+index e187c24..e199e71 100644
+--- original/lab3/web-handler/web-handler.cabal
++++ solution/lab3/web-handler/web-handler.cabal
+@@ -8,8 +8,8 @@ build-type:     Simple
+ library
+   exposed-modules:
+     Handler
+-    -- Handler_T1
+-    -- Handler_T2
++    Handler_T1
++    Handler_T2
+   build-depends:
+     base >=4.7 && <5,
+     blaze-html,
+@@ -17,7 +17,41 @@ library
+     containers,
+     cookie,
+     http-types,
++    mtl,
+     text,
+     wai >=3.0
+   default-language: Haskell2010
+ 
++executable hello-2
++  main-is:
++    hello-2.hs
++  other-modules:
++    Handler
++  build-depends:
++    base >=4.7 && <5,
++    blaze-html,
++    bytestring,
++    cookie,
++    http-types,
++    mtl,
++    text,
++    wai >=3.0,
++    warp
++  default-language: Haskell2010
++
++executable game
++  main-is:
++    game.hs
++  other-modules:
++    Handler
++  build-depends:
++    base >=4.7 && <5,
++    blaze-html,
++    bytestring,
++    cookie,
++    http-types,
++    mtl,
++    text,
++    wai >=3.0,
++    warp
++  default-language: Haskell2010
