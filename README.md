@@ -401,7 +401,8 @@ These instructions start from the submitted archive `lab5.zip`.
 
 ### Environment
 
-Use the DAT course VM for the full build and browser test.
+The course VM already includes the JavaScript compiler tools needed for the
+browser frontend. For a local machine, use the local setup section below.
 
 The frontend JavaScript build requires the GHC JavaScript backend tools used by
 the course setup:
@@ -424,6 +425,51 @@ command -v javascript-unknown-ghcjs-ghc
 command -v javascript-unknown-ghcjs-ghc-pkg
 ```
 
+### Local Setup
+
+If you are not using the course VM, install the JavaScript compiler toolchain
+locally inside the `lab5` directory. This keeps GHCup, Cabal, Emscripten, and
+the JavaScript build output scoped to Lab 5.
+
+This requires `ghcup`, `git`, `nu`, and network access on the host machine.
+
+From fish, bash, zsh, or any other non-Nushell shell, run:
+
+```sh
+cd lab5
+nu scripts/setup-js-toolchain.nu
+nu scripts/build-frontend-js.nu
+```
+
+If you are already inside Nushell, run:
+
+```nu
+cd lab5
+scripts/setup-js-toolchain.nu
+scripts/build-frontend-js.nu
+```
+
+The local setup uses:
+
+```text
+lab5/.toolhome/          local HOME for GHCup and Cabal
+lab5/.emsdk/             local Emscripten checkout
+lab5/dist-newstyle-js/   local Cabal build directory for the JS build
+```
+
+The default local compiler is `javascript-unknown-ghcjs-9.10.2` with
+Emscripten `3.1.74`.
+
+For an interactive Nushell environment with the local toolchain on `PATH`, run:
+
+```nu
+cd lab5
+source-env scripts/env-js-toolchain.nu
+```
+
+Do not `source` `scripts/env-js-toolchain.nu` from fish or bash; `source-env` is
+a Nushell command.
+
 ### Extract
 
 Extract the archive. It creates this directory:
@@ -440,13 +486,23 @@ cd dat-prj-5
 
 ### Build
 
-Build all Haskell targets:
+If you ran the local setup above, the frontend is already built. To rebuild it
+later from a non-Nushell shell:
 
 ```sh
+cd lab5
+nu scripts/build-frontend-js.nu
+```
+
+On the course VM or in the extracted `dat-prj-5/` archive, build all native
+Haskell targets:
+
+```sh
+cd dat-prj-5
 cabal build all
 ```
 
-Build the JavaScript frontend:
+Then build the JavaScript frontend:
 
 ```sh
 cd forums-frontend

@@ -4,7 +4,8 @@ These instructions start from the submitted archive `lab5.zip`.
 
 ## Environment
 
-Use the DAT course VM for the full build and browser test.
+The course VM already includes the JavaScript compiler tools needed for the
+browser frontend. For a local machine, use the local setup section below.
 
 The frontend JavaScript build requires the GHC JavaScript backend tools used by
 the course setup:
@@ -41,31 +42,13 @@ Enter the extracted project:
 cd dat-prj-5
 ```
 
-## Build
-
-Build all Haskell targets:
-
-```sh
-cabal build all
-```
-
-Build the JavaScript frontend:
-
-```sh
-cd forums-frontend
-make clean
-make build
-```
-
-The frontend build creates the generated `public/` directory.
-
-### Local JavaScript Toolchain
+## Local Setup
 
 If you are not using the course VM, you can install the JavaScript compiler
 toolchain locally inside this `lab5` directory. This does not change your system
 GHCup/Cabal setup or the other labs.
 
-This requires `ghcup`, `git`, and network access on the host machine.
+This requires `ghcup`, `git`, `nu`, and network access on the host machine.
 
 From fish, bash, zsh, or any other non-Nushell shell, run the Nu scripts
 explicitly from `lab5/`:
@@ -114,6 +97,31 @@ From another shell, pass overrides through `nu -c`:
 ```sh
 nu -c '$env.DAT_LAB5_JS_GHC_VERSION = "javascript-unknown-ghcjs-9.10.2"; $env.DAT_LAB5_EMSDK_VERSION = "3.1.74"; scripts/setup-js-toolchain.nu'
 ```
+
+## Build
+
+If you ran the local setup above, the frontend is already built. To rebuild it
+later from a non-Nushell shell:
+
+```sh
+nu scripts/build-frontend-js.nu
+```
+
+On the course VM, build all Haskell targets:
+
+```sh
+cabal build all
+```
+
+Then build the JavaScript frontend:
+
+```sh
+cd forums-frontend
+make clean
+make build
+```
+
+The frontend build creates the generated `public/` directory.
 
 ## Run
 
