@@ -1,0 +1,52 @@
+cabal-version: 1.12
+
+name:           forums-backend
+version:        0.0.0.2
+author:         Jordi Forga Alberich
+build-type:     Simple
+
+tested-with:
+    GHC == 9.2.8
+    GHC == 9.6.7
+    GHC == 9.10.3
+
+executable forums-backend
+  main-is: Main.hs
+  other-modules:
+      Forums.App
+      Forums.Config
+      Forums.Found
+      Forums.Handler
+      Forums.AuthHandler
+      Forums.View
+      Forums.Model
+      Db
+      SessionBackend
+  hs-source-dirs:
+      src templates
+  build-depends:
+    aeson
+    , base >=4.9 && <5
+    , blaze-markup
+    , bytestring
+    , cereal
+    , clientsession
+    , cmark
+    , containers
+    , cookie
+    , cryptonite
+    , datfw-core >=0.2.1 && <0.3
+    , directory
+    , http-types
+    , mtl
+    , sqlite-simple
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , wai >=3.0
+    , wai-extra
+    , warp
+  ghc-options: -threaded
+  default-language: Haskell2010
+

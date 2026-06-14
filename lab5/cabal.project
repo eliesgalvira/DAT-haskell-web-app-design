@@ -1,0 +1,8 @@
+
+packages:
+  forums-backend
+  forums-frontend
+  http-serve
+
+  libs/datfw-core-0.2.2.0
+

@@ -1,0 +1,28 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-offset-8 col-sm-4">
+      $maybe{ user <- mbuser }
+        <span class="glyphicon glyphicon-user"></span> Usuari: <b>#{udName user}</b> <br/>
+        <a href="@{ChangePassR}">Canvia <em>password</em></a> &nbsp;&nbsp;
+        <span class="glyphicon glyphicon-log-out"></span> <a href="@{LogoutR}">Tanca sessió</a>
+      $nothing
+        <span class="glyphicon glyphicon-log-in"></span> <a href="@{LoginR}">Login</a>
+      $end
+    </div>
+  </div>
+  $maybe{ msg <- mbmsg }<div class="message error">#{msg}</div>$end
+  <hr>
+  ^{widget}
+</div>
+
+<hr>
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"><!--//--></div>
+        <div class="col-md-4">Jordi Forga, Tardor 2025</div>
+      </div>
+    </div>
+</footer>
+
