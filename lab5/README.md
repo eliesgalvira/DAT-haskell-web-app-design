@@ -14,7 +14,7 @@ javascript-unknown-ghcjs-ghc
 javascript-unknown-ghcjs-ghc-pkg
 ```
 
-The `forums-frontend/Makefile` calls `../js-cabal`, and `js-cabal` is configured
+The `forums-frontend/Makefile` calls `../js-cabal.nu`, and `js-cabal.nu` is configured
 to use those tools. A normal Linux/macOS/Windows system with only regular GHC can
 build native Haskell targets with `cabal build all`, but it will not complete
 `make build` for the browser frontend unless these JavaScript compiler tools are
@@ -58,6 +58,62 @@ make build
 ```
 
 The frontend build creates the generated `public/` directory.
+
+### Local JavaScript Toolchain
+
+If you are not using the course VM, you can install the JavaScript compiler
+toolchain locally inside this `lab5` directory. This does not change your system
+GHCup/Cabal setup or the other labs.
+
+This requires `ghcup`, `git`, and network access on the host machine.
+
+From fish, bash, zsh, or any other non-Nushell shell, run the Nu scripts
+explicitly from `lab5/`:
+
+```sh
+nu scripts/setup-js-toolchain.nu
+nu scripts/build-frontend-js.nu
+```
+
+If you are already inside Nushell, you can run them directly:
+
+```nu
+scripts/setup-js-toolchain.nu
+scripts/build-frontend-js.nu
+```
+
+For an interactive Nushell environment with the local toolchain on `PATH`, run:
+
+```nu
+source-env scripts/env-js-toolchain.nu
+```
+
+Do not `source` `scripts/env-js-toolchain.nu` from fish or bash; `source-env` is
+a Nushell command.
+
+The local setup uses:
+
+```text
+.toolhome/          local HOME for GHCup and Cabal
+.emsdk/             local Emscripten checkout
+dist-newstyle-js/   local Cabal build directory for the JS build
+```
+
+The default compiler is `javascript-unknown-ghcjs-9.10.2`. Older 9.6.x JavaScript
+GHCs do not expose `GHC.JS.Foreign.Callback`, which `ghcjs-base-0.8.0.4`
+requires. You can override the versions before setup:
+
+```nu
+$env.DAT_LAB5_JS_GHC_VERSION = 'javascript-unknown-ghcjs-9.10.2'
+$env.DAT_LAB5_EMSDK_VERSION = '3.1.74'
+scripts/setup-js-toolchain.nu
+```
+
+From another shell, pass overrides through `nu -c`:
+
+```sh
+nu -c '$env.DAT_LAB5_JS_GHC_VERSION = "javascript-unknown-ghcjs-9.10.2"; $env.DAT_LAB5_EMSDK_VERSION = "3.1.74"; scripts/setup-js-toolchain.nu'
+```
 
 ## Run
 

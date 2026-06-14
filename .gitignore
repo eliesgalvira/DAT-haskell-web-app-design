@@ -1,4 +1,5 @@
 dist-newstyle/
+dist-newstyle-js/
 .stack-work/
 stack.yaml.lock
 .zed/
@@ -6,3 +7,8 @@ stack.yaml.lock
 *.o
 *.dyn_hi
 *.dyn_o
+lab5/.emsdk/
+lab5/.toolhome/
+lab5/forums-frontend/public/
+lab5/forums-frontend/browse-user-data*/
+lab5/forums-backend/client_session_key.aes

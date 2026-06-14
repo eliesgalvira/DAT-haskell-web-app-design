@@ -1,7 +1,7 @@
 
 .PHONY= help build serve browse dbg-build dbg-repl clean
 
-js_cabal=../js-cabal
+js_cabal=../js-cabal.nu
 app=forums-frontend
 browser=google-chrome
 #browser=chromium
@@ -32,4 +32,3 @@ dbg-repl:
 
 clean:
 	rm -rf public browse-user-data
-

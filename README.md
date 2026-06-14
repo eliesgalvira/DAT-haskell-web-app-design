@@ -411,7 +411,7 @@ javascript-unknown-ghcjs-ghc
 javascript-unknown-ghcjs-ghc-pkg
 ```
 
-The `forums-frontend/Makefile` calls `../js-cabal`, and `js-cabal` is configured
+The `forums-frontend/Makefile` calls `../js-cabal.nu`, and `js-cabal.nu` is configured
 to use those tools. A normal Linux/macOS/Windows system with only regular GHC can
 build native Haskell targets with `cabal build all`, but it will not complete
 `make build` for the browser frontend unless these JavaScript compiler tools are
@@ -513,3 +513,123 @@ The archive intentionally excludes generated build output such as:
 - `forums-frontend/browse-user-data/`
 
 These directories are recreated by the build and run commands above.
+
+## Quick Run Cheat Sheet
+
+These commands assume each lab has already been extracted, set up, and built.
+Run them from the repository root unless a command says to open a second
+terminal.
+
+### Lab 1
+
+```sh
+cd lab1
+./mps1 exercici1.txt
+./mps2 exercici1.txt
+./mps3 exercici1.txt
+printf 'mul ( div ( mul 3 5) 7) ( sub 2 1)\n' > expressio.txt
+./me expressio.txt
+```
+
+Expected result for the supplied stack-machine input is `2`.
+
+### Lab 2
+
+```sh
+cd lab2/dat-prj
+stack run life
+```
+
+Open the URL printed by the program, usually:
+
+```text
+http://localhost:3708/
+```
+
+Stop with `Ctrl+C`.
+
+### Lab 3
+
+```sh
+cd lab3
+stack run game
+```
+
+Open:
+
+```text
+http://localhost:4050
+```
+
+If `4050` is busy:
+
+```sh
+cd lab3
+PORT=4051 stack run game
+```
+
+Then open `http://localhost:4051`. Stop with `Ctrl+C`.
+
+### Lab 4
+
+```sh
+cd lab4
+cabal run forums-app -- 4099
+```
+
+Open:
+
+```text
+http://127.0.0.1:4099/
+```
+
+Test users:
+
+```text
+usuari1 / 1234
+usuari2 / 1234
+```
+
+Stop with `Ctrl+C`.
+
+### Lab 5
+
+Terminal 1, backend:
+
+```sh
+cd lab5/forums-backend
+cabal run forums-backend -- 5001
+```
+
+Terminal 2, frontend static server:
+
+```sh
+cd lab5/forums-frontend
+make serve
+```
+
+Open:
+
+```text
+http://localhost:8008/index.html
+```
+
+Because the frontend runs on `8008` and the backend runs on `5001`, normal
+browsers may block API writes with CORS. For local testing, launch a separate
+browser profile with web security disabled, for example:
+
+```sh
+helium-browser --disable-web-security --disable-site-isolation-trials \
+  --user-data-dir=browse-user-data \
+  http://localhost:8008/index.html
+```
+
+Or, if available:
+
+```sh
+chromium --disable-web-security --disable-site-isolation-trials \
+  --user-data-dir=browse-user-data \
+  http://localhost:8008/index.html
+```
+
+Stop both servers with `Ctrl+C` in their terminals.
