@@ -1,8 +1,0 @@
-cradle:
-  stack:
-    - path: "./life/life.hs"
-      component: "life:exe:life"
-    - path: "./life/Life"
-      component: "life:exe:life"
-    - path: "./life/exemple.hs"
-      component: "life:exe:exemple"

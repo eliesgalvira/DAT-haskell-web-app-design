@@ -14,7 +14,7 @@ import           Miso hiding (Topic)
 import           Miso.Html
 import           Miso.Html.Property
 import           Miso.Router (toURI)
-import           Miso.String
+import           Miso.String (MisoString, ms)
 
 data Model = Model
         { mTopic :: RsrcStatus Topic

@@ -1,12 +1,10 @@
 
 packages:
   life
+  -- web-handler
+  -- forums-app
 
   libs/drawing-activity-0.2.1.0
   libs/drawing-core-0.1.2.0
   libs/jsaddle-warp-extra-0.1.0.0
-
-constraints:
-  jsaddle ==0.9.9.3,
-  jsaddle-warp ==0.9.9.5,
-  miso ==1.8.7.0
+  libs/datfw-core-0.2.0.0

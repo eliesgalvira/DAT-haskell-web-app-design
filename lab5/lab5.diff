@@ -19,7 +19,7 @@ index a6825c5..9f00f01 100644
 +import           Miso.Html
 +import           Miso.Html.Property
 +import           Miso.Router (toURI)
-+import           Miso.String
++import           Miso.String (MisoString, ms)
  
  data Model = Model
 -        { -- A completar per l'estudiant
