@@ -1,5 +1,93 @@
 # DAT Labs
 
+## Lab 1
+
+These instructions start from the submitted archive `lab1.zip`.
+
+### Requirements
+
+You need GHC installed and available on `PATH`.
+
+Lab 1 does not need Cabal or Stack. The PDF presents the lab as a set of
+Haskell source files that can be compiled directly with GHC.
+
+The archive contains the source files inside `lab1/`:
+
+```text
+lab1/
+```
+
+The submitted ZIP also contains `cabal.project` and `dat-labs.cabal` at the top
+level. They are not required for Lab 1.
+
+### Extract
+
+Extract the archive into a new directory and enter the `lab1/` folder:
+
+```sh
+rm -rf lab1-build
+mkdir lab1-build
+unzip lab1.zip -d lab1-build
+cd lab1-build/lab1
+```
+
+If you extract it with Windows Explorer, create a new folder first and extract
+`lab1.zip` into that folder. Then open a terminal in the extracted `lab1`
+folder, the one that contains `mps1.hs`, `mps2.hs`, `mps3.hs`, `me.hs`, and the
+support modules.
+
+### Build
+
+Build the executables directly with GHC:
+
+```sh
+ghc --make mps1.hs -o mps1
+ghc --make mps2.hs -o mps2
+ghc --make mps3.hs -o mps3
+ghc --make me.hs -o me
+```
+
+GHC creates intermediate `.hi` and `.o` files in the same directory. They can be
+removed after the build if needed:
+
+```sh
+rm -f *.hi *.o
+```
+
+### Run
+
+Each executable expects an input file path.
+
+The ZIP includes `exercici1.txt`, which contains the stack-machine program from
+the PDF:
+
+```text
+3 5 Mul 7 Div 2 1 Sub Mul
+```
+
+Run the stack-machine executables with that file:
+
+```sh
+./mps1 exercici1.txt
+./mps2 exercici1.txt
+./mps3 exercici1.txt
+```
+
+The expected result is `2`.
+
+For `me`, create a text file with an expression like the one from the PDF:
+
+```sh
+printf 'mul ( div ( mul 3 5) 7) ( sub 2 1)\n' > expressio.txt
+./me expressio.txt
+```
+
+On Windows, run the generated `.exe` files instead, for example:
+
+```powershell
+.\mps1.exe exercici1.txt
+```
+
 ## Lab 2
 
 These instructions start from the submitted archive `lab2.zip`.
@@ -8,8 +96,27 @@ These instructions start from the submitted archive `lab2.zip`.
 
 You need `stack` installed.
 
-The first build may download GHC and the project dependencies. This can take a
-few minutes.
+The first build can take several minutes. The slow part is not the `life`
+program itself, but the support stack needed to run the drawing app in a
+browser.
+
+Measured on this machine with GHC already installed but an empty Stack package
+cache:
+
+- `stack build --only-dependencies life` took about 351 seconds. This is the
+  expensive part. Stack downloaded and indexed Hackage/Stackage metadata, then
+  built the external browser/server dependencies: `miso`, `jsaddle`,
+  `jsaddle-warp`, `warp`, `wai`, `websockets`, `servant`, `lens`, `aeson`,
+  `cryptonite`, `http2`, `vector`, and many smaller packages.
+- After those external dependencies existed, `stack build life` took about 17
+  seconds. This built the local course libraries `drawing-core`,
+  `jsaddle-warp-extra`, `drawing-activity`, and finally the `life` executable.
+- Running `stack build life` again with nothing changed took about 0.3 seconds,
+  because Stack reused the compiled cache.
+
+If the GHC version selected by `resolver: lts-20.26` is not installed yet, Stack
+may also need to install GHC before any of the timings above. That is another
+one-time cost.
 
 ### Extract
 
@@ -94,6 +201,91 @@ open the extracted `dat-prj/` folder as the project root and check that
 
 Browser requests such as `favicon.ico` or `.well-known/...` may appear in the
 terminal. They can be ignored if the application works in the browser.
+
+## Lab 4
+
+These instructions start from the submitted archive `lab4.zip`.
+
+### Requirements
+
+You need GHC, Cabal, and `sqlite3` installed and available on `PATH`.
+
+The archive includes the local `datfw-core` dependency in
+`libs/datfw-core-0.2.0.0`, so it does not require files from Lab 2.
+
+### Extract
+
+Extract the archive and enter the extracted directory:
+
+```sh
+unzip lab4.zip -d lab4
+cd lab4
+```
+
+If you extract it with Windows Explorer, open a terminal in the extracted folder
+that contains `forums-app.cabal`, `cabal.project`, `src/`, `templates/`, and
+`sqlite/`.
+
+### Create Database
+
+Create the SQLite database from the supplied SQL files:
+
+```sh
+rm -f forums.db
+sqlite3 forums.db ".read sqlite/schema.sql"
+sqlite3 forums.db ".read sqlite/users-data.sql"
+sqlite3 forums.db ".read sqlite/forums-data.sql"
+```
+
+In PowerShell, use this equivalent first command:
+
+```powershell
+Remove-Item forums.db -ErrorAction SilentlyContinue
+```
+
+### Build And Run
+
+Run the application:
+
+```sh
+cabal run forums-app -- 4099
+```
+
+Open:
+
+```text
+http://127.0.0.1:4099/
+```
+
+If port `4099` is busy, use another port:
+
+```sh
+cabal run forums-app -- 4100
+```
+
+Stop the server with `Ctrl+C`.
+
+### Test Users
+
+```text
+usuari1 / 1234
+usuari2 / 1234
+```
+
+### QA Checklist
+
+1. Logged out, check that the home page, `/forums/1`, and `/topics/1` render.
+2. Log in as `usuari1`.
+3. Create a new forum from the home page.
+4. Open that forum and create a new topic.
+5. Open that topic and add a reply.
+6. Check that topic and post counters update on the forum and home pages.
+7. As the forum moderator, check that edit and delete controls are visible.
+8. Log out, log in as `usuari2`, and check that this user can post but cannot
+   edit or delete a forum created by `usuari1`.
+
+To reset the test data, stop the server and rerun the database creation
+commands above.
 
 ## Lab 5
 
