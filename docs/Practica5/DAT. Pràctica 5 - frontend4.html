@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>DAT. Pràctica 4</title>
+  <!--base href="../"-->
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend4_files/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend4_files/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://soft0.upc.edu/dat/practica4/">DAT. Pràctica 4</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Enunciat</a></li>
+        <!--li><a href="../treball.html">Entrega</a></li-->
+        <li class="active"><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html">Frontend</a></li>
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/canvis.html">Canvis</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://soft0.upc.edu/dat/">DAT</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica1/">Pràctica 1</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica2/">Pràctica 2</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica3/">Pràctica 3</a></li>
+      </ul>
+    </div><!-- .navbar-collapse -->
+  </div><!-- .container -->
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+<div class="sidebar-nav-fixed affix">
+<ul class="nav">
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1">1 - HTML dinàmic</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html">2 - Components</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html">3 - Accés al servei WEB</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html"><font color="red">4 - Múltiples vistes / <em>Routing</em></font></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html">5 - Autenticació. Navegació</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_last.html">6 - Formularis</a></li>
+</ul>
+</div>
+</div>
+
+<div class="col-md-10">
+
+<!--div class="alert alert-warning" role="alert">EN CONSTRUCCIÓ. Si us plau, recarregueu la pàgina per poder veure l'última versió.</div-->
+
+<!------------------------------>
+<a name="step_4"></a>
+<h2>Quart pas: Múltiples vistes / <em>Routing</em></h2>
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_4" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+<p>En aquest pas, aprendrem com crear una plantilla de <em>layout</em> i com crear una aplicació que tingui
+diverses vistes afegint l'encaminament mitjançant un mòdul AngularJS anomenat <a href="https://docs.angularjs.org/api/ngRoute">ngRoute</a>.</p>
+
+<ul>
+<li>Quan navegueu a <code>.../index.html</code>, se us dirigeix ​​a <code>.../index.html#!/</code> i la llista de fòrums apareix al navegador.</li>
+<li>Quan feu clic a un enllaç de fòrum, l’URL canvia al fòrum específic i es mostra la pàgina de detall del fòrum.</li>
+</ul>
+
+<p>A continuació es mostren els canvis més importants.</p>
+
+
+<h3>Múltiples plantilles de visualització, enrutament i <em>layout</em></h3>
+
+<p>La nostra aplicació està creixent lentament i es fa més complexa. Abans d’aquest pas,
+l’aplicació va proporcionar als nostres usuaris una vista única, construida a partir de la plantilla principal que inclüia el component
+<code>forumList</code> (que mostra la llista de tots els fòrums).
+El següent pas consisteix en afegir una vista que mostri informació detallada de cadascun dels fòrums de la llista.</p>
+
+<p>Per afegir la vista detallada, convertirem index.html en el que anomenem "plantilla de <em>layout</em>".
+Aquesta és una plantilla comuna per a totes les visualitzacions de la nostra aplicació. A continuació,
+ s'inclouen altres "plantilles parcials" en aquesta plantilla de <em>layout</em> en funció de la "ruta" actual - la vista que actualment es mostra a l'usuari.</p>
+
+<p>Les rutes d’aplicació a AngularJS es declaren a través del <a href="https://docs.angularjs.org/api/ngRoute/provider/$routeProvider">$routeProvider</a>,
+que és el proveïdor del servei <a href="https://docs.angularjs.org/api/ngRoute/service/$route">$route</a>.
+Aquest servei facilita la connexió de controladors, de plantilles de visualització i de la ubicació d’URL actual al navegador.
+Utilitzant aquesta funció, podem implementar <a href="https://en.wikipedia.org/wiki/Deep_linking"><em>deep linking</em></a>,
+que ens permet utilitzar l’historial del navegador (navegació enrere i endavant) i les adreces d'interès.</p>
+
+<div class="alert alert-success ng-scope">
+<p><code>ngRoute</code> ens permet associar un controlador i una plantilla a una URL específica (o patró d’URL).</p>
+
+<p>Com que ja hem après que els components ens permeten combinar controladors amb plantilles de forma modular, provable, també utilitzarem components per a l'encaminament.
+Cada ruta s’associarà a un component i aquest component serà l’encarregat de proporcionar la plantilla de vista i el controlador.</p>
+</div>
+
+
+<h3>Una nota sobre DI, injectors i proveïdors</h3>
+
+<p>Com heu observat, la injecció de dependència (DI) és el nucli d'AngularJS, per la qual cosa és important que enteneu una cosa o dues sobre el seu funcionament.</p>
+
+<p>Quan s’inicia l’aplicació, AngularJS crea un injector que s’utilitzarà per trobar i injectar tots els serveis que requereixi l’aplicació.
+L'injector en sí no sap res del que fan els serveis. De fet, l'injector no sap ni tan sols l'existència d'aquests serveis,
+tret que estigui configurat amb les definicions del mòdul adequades.</p>
+
+<p>L'injector només realitza els passos següents:</p>
+<ul>
+<li>Carrega la/les definició/definicions de mòdul que especifiqueu en l'aplicació.</li>
+<li>Registra tots els proveïdors definits en aquestes definicions del mòdul.</li>
+<li>Quan se li demana fer-ho, instancia els serveis i les seves dependències, a través dels seus Proveïdors, com a paràmetres d’una funció injectable.
+</li></ul>
+
+<p>Els proveïdors són objectes que proporcionen (creen) instàncies de serveis i exposen API de configuració,
+que es pot utilitzar per controlar la creació i el comportament en temps d'execució d'un servei.
+En el cas del servei $route, $routeProvider exposa un API que ens permet definir les rutes per a la nostra aplicació.</p>
+
+<div class="alert alert-warning ng-scope">
+<strong>Nota:</strong> Els proveïdors només es poden injectar a les funcions de configuració.
+Per tant, no podeu injectar $routeProvider a controladors en temps d'execució.
+</div>
+
+<p>Els mòduls AngularJS solucionen el problema d’eliminar variables globals de l’aplicació i proporcionen una forma de configurar l’injector.
+Al contrari dels mòduls AMD o require.js, els mòduls AngularJS no intenten resoldre el problema de l'ordenació de càrrega de scripts o de la recuperació de comandes mandrosos.
+Aquests objectius són totalment independents i tots dos sistemes de mòduls poden viure de costat i complir els seus objectius.</p>
+
+<p>Per aprofundir en el coneixement de AngularJS, consulteu
+<a href="https://github.com/angular/angular.js/wiki/Understanding-Dependency-Injection">Understanding Dependency Injection</a>.</p>
+
+
+<h3>Dependències i plantilla</h3>
+
+
+<p>AngularJS proporciona la funcionalitat d'encaminament afegida en aquest pas en el mòdul <code>ngRoute</code>,
+que es distribueix per separat del codi principal del <em>framework</em> AngularJS.</p>
+
+<p>En la pàgina principal caldrà incloure la referència al fitxer que conté aquest mòdul.</p>
+
+<p>El servei <code>$route</code> s’utilitza normalment conjuntament amb la directiva <a href="https://docs.angularjs.org/api/ngRoute/directive/ngView">ngView</a>.
+El paper de la directiva <code>ngView</code> és incloure la plantilla de visualització de la ruta actual a la plantilla de <em>layout</em>.
+Això fa que s’adapti perfectament a la nostra plantilla <code>index.html</code>.</p>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4/index.html"><strong>index.html:</strong></a></p>
+<pre>&lt;html ng-app="forumsApp"&gt;
+&lt;head&gt;
+...
+&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.min.js"&gt;&lt;/script&gt;
+&lt;!-- App specific: --&gt;
+...
+&lt;script type="text/javascript" src="forum.component.js"&gt;&lt;/script&gt;
+...
+&lt;/head&gt;
+&lt;body&gt;
+&nbsp;&nbsp;...
+&nbsp;&nbsp;&lt;div ng-view&gt;&lt;/div&gt;
+&nbsp;&nbsp;...
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>Hem afegit dues noves etiquetes &lt;script&gt; al nostre fitxer index.html per carregar alguns fitxers JavaScript addicionals a la nostra aplicació:</p>
+<ul>
+<li>angular-route.js: defineix el mòdul AngularJS <code>ngRoute</code>, que ens proporciona l'encaminament.</li>
+<li>forum.component.js: defineix el component <code>forum</code> (vegeu més avall).</li>
+</ul>
+
+<p>Observeu que s'ha eliminat la línia <code>&lt;forum-list&gt;&lt;/forum-list&gt;</code> de la plantilla <code>index.html</code>
+i s'ha substituit per un element <code>&lt;div&gt;</code> amb l'atribut <code>ng-view</code>.</p>
+
+<p>
+  <img src="./DAT. Pràctica 5 - frontend4_files/step_4-scopes.png" alt="Component scopes" class="img-thumbnail">
+</p>
+
+
+<h3>Configuració d'un mòdul</h3>
+
+<p>El mètode .config () d’un mòdul ens dóna accés als proveïdors disponibles per a la configuració.
+Per posar a la nostra aplicació els proveïdors, serveis i directives definits a ngRoute, hem d’afegir ngRoute com a dependència del nostre mòdul forumsApp.</p>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4/app.js"><strong>app.js:</strong></a></p>
+<pre>angular.module ('forumsApp', ['ngRoute']);
+...
+</pre>
+
+<p>Ara, a més dels serveis i directrius bàsics, també podem configurar el servei <code>route</code> (utilitzant el seu proveïdor) per a la nostra aplicació:</p>
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4/app.js"><strong>app.js:</strong></a></p>
+<pre>...
+angular.module('forumsApp').
+  config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/', {
+            template: '&lt;forum-list&gt;&lt;/forum-list&gt;'
+        }).
+        when('/forum-:forumId', {
+            template: '&lt;forum&gt;&lt;/forum&gt;'
+        }).
+        otherwise('/');
+  }]);
+</pre>
+
+<p>Utilitzant el mètode .config (), sol·licitem als proveïdors necessaris (per exemple, <code>$routeProvider</code>)
+que s’injectin a la nostra funció de configuració i que després utilitzin els seus mètodes per especificar el comportament dels serveis corresponents.
+Aquí, utilitzem els mètodes <code>$routeProvider.when()</code> i <code>$routeProvider.otherwise()</code> per definir les nostres rutes d’aplicació.</p>
+
+<p>Les nostres rutes es defineixen de la següent manera:</p>
+<ul>
+<li>when('/'): determina la vista que es mostrarà, quan el fragment <em>hash</em> d'URL és <code>/</code>.
+Segons la plantilla especificada, AngularJS crearà una instància del component <code>forumList</code> per gestionar la vista.
+Observeu que aquest és el mateix element que abans teníem al fitxer index.html.</li>
+<li>when('/forum-:forumId'): determina la vista que es mostrarà, quan el fragment <em>hash</em> d'URL coincideix amb <code>/forum-&lt;tid&gt;</code>,
+on &lt;tid&gt; és una part variable de l'URL. El responsable de la vista serà el component <code>forum</code>.</li>
+<li>otherwise('/'): defineix una ruta de retorn a la qual es dirigirà, quan cap definició de ruta coincideix amb l'URL actual.
+(Aquí es redirigirà a <code>/</code>.)</li>
+</ul>
+
+<p>En aquest pas, reutilitzem el component <code>forumList</code> ja definit en el pas anterior i definim un nou component <code>forum</code>.
+El component <code>forum</code> mostrarà els detalls del fòrum seleccionat juntament amb el títol de cadascuna de les qüestions realitzades en el fòrum.</p>
+
+<p>Tingueu en compte l’ús del paràmetre <code>:forumId</code> en la segona declaració de ruta.
+El servei <code>$route</code> utilitza la declaració de ruta <code>'/forum-:forumId'</code> com una plantilla que es correspon amb l'URL actual.
+Totes les variables definides amb el prefix <code>:</code> s’extreuen i s'afegeixen a l’objecte (injectable) <code>$routeParams</code>.</p>
+
+<div class="alert alert-info">
+<p>Haureu observat que, mentre que les rutes de ruta configurades comencen amb <code>/</code>, les URL usades a les plantilles comencen amb <code>#!/</code>.</p>
+
+<p>Sense entrar en molts detalls, AngularJS (per defecte) utilitza l'identificador de fragment de la URL
+(és a dir, el que ve després del símbol <em>hash</em> (<code>#</code>)) per determinar la ruta actual.
+A més d’això, també podeu especificar un <a href="https://docs.angularjs.org/api/ng/provider/$locationProvider#hashPrefix">prefix de <em>hash</em></a> (<code>!</code> per defecte)
+que ha d’aparèixer després del símbol <em>hash</em> per tal que AngularJS consideri el valor una "ruta AngularJS" i la processi.</p>
+
+<p>Podeu obtenir més informació sobre com funciona tot això a la secció <a href="https://docs.angularjs.org/guide/$location">Using $location</a> de la guia per a desenvolupadors.
+Però tot el que heu de saber ara, és que les URLs de les nostres diverses rutes haurien de ser prefixades amb <code>#!</code>.</p>
+</div>
+
+
+<h3>El component de fòrum</h3>
+
+<p>Hem creat un component <code>forum</code> per gestionar la visualització dels detalls d'un fòrum.
+Seguim un disseny similar al de <code>forumList</code>, definint en el controlador les variables del model (<code>forum</code> i <code>topics</code>)
+i usant el servei <code>forumApiSrv</code> per accedir al <em>backend</em> i obtenir els corresponents valors.</p>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4/forum.component.js"><strong>forum.component.js:</strong></a></p>
+<pre>angular.module('forumsApp').
+  component('forum', {
+    templateUrl: 'forum.template.html',
+    controller: ['$routeParams','forumApiSrv', function($routeParams, forumApiSrv) {
+      var self = this;
+      self.forum = null;
+      self.topics = []; // array of topics
+
+      forumApiSrv.getForum($routeParams.forumId).then(
+        function(data) {
+          self.forum = data;
+        }
+      );
+      forumApiSrv.getForumTopics($routeParams.forumId).then(
+        function(data) {
+          self.topics = data.items;
+        }
+      );
+    }]
+  });
+</pre>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4/forum.template.html"><strong>forum.template.html:</strong></a></p>
+<pre>  &lt;div&gt;&lt;a href="#!/"&gt;Torna a la llista de fòrums&lt;/a&gt;&lt;/div&gt;
+  ...
+  Responsable: {{$ctrl.forum.leader}}
+  Títol: {{$ctrl.forum.title}}
+  Descripció: {{$ctrl.forum.description}}
+  ...
+      &lt;tr ng-repeat="q in $ctrl.topics"&gt;
+        &lt;td&gt;{{q.started | date : "d MMM,yyyy H:mm:ss"}}&lt;/td&gt;&lt;td&gt;{{q.user}}&lt;/td&gt;&lt;td&gt;{{q.title}}&lt;/td&gt;
+      &lt;/tr&gt;
+  ...
+</pre>
+
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_4"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_4" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+
+</div><!-- col-md-10-->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"><!--//--></div>
+        <div class="col-md-4">Jordi Forga, Desembre 2019</div>
+      </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./DAT. Pràctica 5 - frontend4_files/jquery.min.js.download"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./DAT. Pràctica 5 - frontend4_files/bootstrap.min.js.download"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./DAT. Pràctica 5 - frontend4_files/ie10-viewport-bug-workaround.js.download"></script>
+
+
+
+
+
+</body></html>

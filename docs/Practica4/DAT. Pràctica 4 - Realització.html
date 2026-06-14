@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://soft0.upc.edu/dat/prac-forums/realitzacio.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 4 - Realització_files/bootstrap.4.1.3.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 4 - Realització_files/style-4.css">
+
+  <title>DAT. Pràctica 4 - Realització</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-maq-expr/index.html">Pràctica 1</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Pràctica 5</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+  <nav class="nav sticky-top navbar-light bg-light nav-pills flex-column">
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Introducció</a>
+    <!--a class="nav-link">Exemples</a>
+    <nav class="nav pl-2">
+      <a class="nav-link" href="exemples/index.html"><em>Hello World</em></a>
+      <a class="nav-link" href="exemples/tasks.html"><em>Tasks</em></a>
+    </nav-->
+    <a class="nav-link active" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html">Realització</a>
+  </nav>
+</div>
+
+<div class="col-md-2 order-last">
+  <nav class="nav sticky-top navbar-light bg-light flex-column">
+    <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#projecte">Projecte</a></li>
+    <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#sql">Base de dades</a></li>
+    <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#codi">Codi font</a></li>
+    <nav class="nav pl-2">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#founds">Fonaments</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#routing">Enrutament</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#autenticacio">Autenticació</a></li>
+    </nav>
+  </nav>
+</div>
+
+<main class="col-md">
+
+<!--div class="alert alert-info" role="alert">
+  <div class="row">
+    <div class="col-auto"><img src="/dat/en-construccion-y-obra-imagen-animada-0016.gif"></div>
+    <div class="col-auto">Aquesta pàgina està en procés de millora. Última modificació: 26-nov-2020</div>
+  </div>
+</div-->
+
+
+<h2 id="projecte">Projecte</h2>
+
+<p>El projecte de pràctiques (directori <a href="http://soft0.upc.edu/dat/dat-prj/"><code>dat-prj</code></a>) té el paquet <code>forums-app</code>
+corresponent a la pràctica 4. La descripció d'aquest paquet la podeu veure en el fitxer
+<a href="http://soft0.upc.edu/dat/dat-prj/forums-app/forums-app.cabal"><code>dat-prj/forums-app/forums-app.cabal</code></a> i
+consisteix en l'executable <code>forums-app</code>.</p>
+
+<p>També podeu <a href="http://soft0.upc.edu/dat/dat-prj/forums-app/">navegar pel contingut de la pràctica</a>.</p>
+
+<p>Se us dona el codi font d'una versió inicial que haureu de completar fins obtenir la funcionalitat demanada.
+El codi d'aquesta <b>versió inicial</b> és <b>compilable</b>.
+ Això vol dir que, un cop <a href="http://soft0.upc.edu/dat/prac-forums/realitzacio.html#sql">creada la base de dades</a>, ja podeu provar l'aplicació.</p>
+
+<p>Per compilar i executar l'aplicació caldrà que feu:</p>
+<pre class="bg-light"><samp>~$ </samp><kbd>cd dat-prj/forums-app</kbd>
+<samp>~/dat-prj/forums-app$ </samp><kbd>stack run forums-app -- PORT</kbd>
+</pre>
+<p>on <code>PORT</code> és el port HTTP pel qual el servidor accepta connexions.</p>
+
+
+<!--p>Disposeu de l'<a href="forums.zip">arxiu de projecte <code>forums.zip</code></a>
+amb tot el codi font i els <em>scripts</em> necessaris per al desenvolupament d'aquesta pràctica.
+Baixeu-vos aquest <a href="forums.zip">arxiu</a> i descomprimiu-lo fent des d'un terminal en la màquina <code>entelsoft0.upc.edu</code>, per exemple:</p>
+<pre class="bg-light">
+<samp>~/practiques$ </samp><kbd>curl http://entelsoft0.upc.edu/dat/forums-app/forums.zip > forums.zip</kbd>
+<samp>~/practiques$ </samp><kbd>unzip forums.zip</kbd>
+<samp>~/practiques$ </samp><kbd>cd forums</kbd>
+<samp>~/practiques/forums$ </samp><kbd>ls</kbd>
+<samp>bin src</samp>
+</pre-->
+
+<!--
+<p>Per compilar i instal.lar l'aplicació, en el projecte hi ha el <em>script</em> <code><a href="../dat-prj/prac-forums/bin/make-forums">bin/make-forums</a></code>.
+ Aquest <em>script</em> compila el codi font amb les bibliteques de <em>Haskell</em> necessàries i instal.la l'aplicació CGI.</p>
+
+<p><code><a href="../dat-prj/prac-forums/bin/make-forums">bin/make-forums</a></code> compila i instal.la el programa <code>forums.cgi</code> en el directori
+ <code>~/public_html/prac-forums</code>.
+ Si voleu canviar la configuració del <em>script</em>, editeu-lo i canvieu les variables corresponents. </p>
+
+<p>Per compilar/instal.lar la pràctica 3, assegureu-vos que el <em>script</em> <code>bin/make-forums</code> té permís d'execució i invoqueu-lo:</p>
+<pre class="bg-light">
+<samp>~/practiques/forums$ </samp><kbd>ls -l bin</kbd>
+<samp>-rwxr-xr-x ... make-forums</samp>
+<samp>~/practiques/forums$ </samp><kbd>bin/make-forums</kbd>
+<samp>Linking ~/public_html/prac-forums/forums.cgi ...</samp>
+</pre>
+-->
+
+
+<h2 id="sql">Creació de la base de dades</h2>
+
+<p>En aquesta pràctica usarem una base de dades <a href="https://www.sqlite.org/">SQLite</a>.
+ Per administrar la base de dades es disposa de <code>sqlite3</code>
+ que és un programa interactiu que accedeix al fitxer indicat (o el crea si no existia) i espera sentències SQL.</p>
+
+<p>Per a l'aplicació dels forums, el SQL per crear la base de dades el teniu distribuït en 3 fitxers del
+directori <a href="http://soft0.upc.edu/dat/dat-prj/forums-app/sqlite"><code>dat-prj/forums-app/sqlite</code></a>:</p>
+<ul>
+ <li><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/sqlite/schema.sql"><code>schema.sql</code></a>
+ Aquest SQL crea les taules necessàries del model (<code>users</code>, <code>forums</code>, <code>topics</code> i <code>posts</code>).</li>
+ <li><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/sqlite/users-data.sql"><code>users-data.sql</code></a>
+ Insereix les dades dels usuaris.</li>
+ <li><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/sqlite/forums-data.sql"><code>forums-data.sql</code></a>
+ Insereix les dades d'un fòrum per poder començar a fer proves.</li>
+</ul>
+
+<p>Decidiu on voleu ubicar el fitxer de base de dades i des del terminal
+ crideu el programa <code>sqlite3</code>, passant-li com argument el nom del fitxer de base de dades
+ i injectant-li a l'entrada el corresponent SQL. Per exemple:</p>
+<pre class="bg-light"><!--samp>~/practiques/forums$ </samp><kbd>mkdir ~/sqlite-dbs</kbd>
+<samp>~/practiques/forums$ </samp><kbd>chmod 700 ~/sqlite-dbs</kbd-->
+<samp>~/dat-prj/forums-app$ </samp><kbd>sqlite3 forums.db &lt; sqlite/schema.sql</kbd>
+<samp>~/dat-prj/forums-app$ </samp><kbd>sqlite3 forums.db &lt; sqlite/users-data.sql</kbd>
+<samp>~/dat-prj/forums-app$ </samp><kbd>sqlite3 forums.db &lt; sqlite/forums-data.sql</kbd>
+</pre>
+
+<div class="alert alert-info" role="alert">Cal tenir en compte que per poder accedir la base de dades des l'aplicació
+ cal definir la variable <code>forumsDbName</code> del mòdul <code>Forums.Config</code>
+ (fitxer <a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Config.hs">dat-prj/forums-app/src/Forums/Config.hs</a>)
+ amb el <em>path</em> del fitxer de base de dades.</div>
+
+
+<h2 id="codi">Codi font</h2>
+
+<p>El codi font de la pràctica es troba en el directori <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src">dat-prj/forums-app/src</a></code>
+del projecte i està format per 9 mòduls. Les dependències entre aquests mòduls les podeu veure amb el següent diagrama:</p>
+<object type="image/svg+xml" data="./DAT. Pràctica 4 - Realització_files/forums-deps.svg">
+  Your browser does not support SVG
+</object>
+
+<p>Cadascún d'aquests mòduls conté les següents funcionalitats:</p><p>
+</p><dl>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Main.hs">Main</a></dt>
+  <dd>És el punt d'inici del servidor Warp i conté l'adaptació de l'aplicació (amb interface WAI) al servidor.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/App.hs">Forums.App</a></dt>
+  <dd>És el punt d'entrada de l'aplicació <b>DatFw</b>. Conté el codi corresponent a la inicialització i a l'enrutament de l'aplicació.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Handler.hs">Forums.Handler</a></dt>
+  <dd>És pròpiament el controlador de l'aplicació. Conté el codi corresponent al processat de les peticions.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/View.hs">Forums.View</a></dt>
+  <dd>Conté el codi corresponent a la generació de les vistes (HTML).</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Found.hs">Forums.Found</a></dt>
+  <dd>Defineix els tipus i les instàncies fonamentals per a l'us de <b>DatFw</b> en aquesta aplicació.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Config.hs">Forums.Config</a></dt>
+  <dd>Variables de configuració de l'aplicació.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Model.hs">Forums.Model</a></dt>
+  <dd>En aquest mòdul es defineixen les entitats de l'aplicació que es guarden en la base de dades. En aquesta pràctica tenim 4: usuaris, fòrums, topics i posts.
+   És independent dels aspectes tant de controlador com de les vistes.</dd>
+<dt><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Db.hs">Db</a></dt>
+   Aquest mòdul ofereix al model una interfície per accedir la base de dades que estalvia l'us de SQL en la definició del model.
+   Tot el SQL queda encapsulat dins d'aquest mòdul.
+</dl>
+
+<div class="alert alert-warning" role="alert">
+<!--p>D'aquests mòduls, pràcticament els únics que s'han de completar són <code><a href="../dat-prj/forums-app/src/Handler.hs">Handler</a></code>
+ (qué conté els handlers del controlador) i <code><a href="../dat-prj/forums-app/src/View.hs">View</a></code> (que conté la generació de les
+ vistes).</p-->
+ <p>Aquests mòduls s'hauran de completar de manera que la funcionalitat de
+ l'aplicació sigui com l'<a href="http://soft0.upc.edu/dat/prac-forums/index.html#funcionalitat">especificada en
+ l'enunciat</a>.
+</p></div>
+
+
+<h4 id="founds">Fonaments</h4>
+
+<p>En el mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Found.hs">Forums.Found</a></code> del codi proveit
+ s'ha definit el tipus del lloc de <code>ForumsApp</code> i les instàncies de les classes fonamentals de <b>DatFw</b>.
+ El tipus <code>ForumsApp</code> conté la informació a nivell d'aplicació que en aquesta pràctica serà la connexió amb la base de dades.
+ (aquesta informació serà accessible des dels <em>handlers</em> amb la funció
+ <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw-Handler.html#v:getSite">getSite</a></code>).</p>
+
+<p>L'aplicació s'accedeix amb URLs que tenen la forma
+</p><pre class="bg-light">http://HOST:PORT<mark>/path-info</mark>?<mark>query-string</mark></pre>
+on el <code>path-info</code> determina la ruta de l'aplicació (en aquesta aplicació no usarem el <em>query-string</em> per a determinar la ruta).<p></p>
+
+<p>La instància de <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:HasRoute">HasRoute</a></code>
+defineix el tipus de les rutes <code>Route ForumsApp</code>
+ i les funcions de conversió entre les rutes definides i el <em>path-info</em> més el <em>query-string</em>.
+ En el codi proveit s'han definit les següents rutes:</p>
+<table class="table table-sm table-striped">
+ <thead><tr><th>Ruta</th><th>Path-info</th><th>Contingut de la resposta</th></tr></thead>
+ <tbody>
+ <tr><td><code>HomeR</code></td>        <td>/</td>
+     <td>Pàgina principal de l'aplicació.</td></tr>
+ <tr><td><code>ForumR fid</code></td>   <td>/forums/<code>fid</code></td>
+     <td>Pàgina que mostra el fòrum amb identificador <code>fid</code></td></tr>
+ <tr><td><code>TopicR tid</code></td>   <td>/topics/<code>tid</code></td>
+     <td>Pàgina que mostra la qüestió (<em>topic</em>) amb identificador <code>tid</code>.</td></tr>
+ <tr><td><code>LoginR</code></td>     <td>/login</td>
+     <td>Autenticació d'usuari i inici de sessió autenticada.</td></tr>
+ <tr><td><code>LogoutR</code></td>     <td>/logout</td>
+     <td>Tancament de sessió autenticada.</td></tr>
+ </tbody>
+</table>
+
+<p>La funció <code>renderRoute</code> fa la conversió de ruta a <em>path-info</em> i <em>query-string</em>,
+mentre que la funció <code>parseRoute</code> fa la conversió inversa de <em>path-info</em> i <em>query-string</em> a ruta.
+Ambdues estàn definides
+per la instància de la classe <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:HasRoute">HasRoute</a></code>
+per al tipus <code>ForumsApp</code>.</p>
+
+<p>La conversió de segment a valor del paràmetre es fa amb la functió <code>fromPathPiece</code> de la
+ classe <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:PathPiece">PathPiece</a></code>
+ (s'ha definit la instància de
+ <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:PathPiece">PathPiece</a></code>
+ per als tipus de paràmetres usats en aquesta aplicació).</p>
+
+<p>En el mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Found.hs">Forums.Found</a></code> també s'ha definit la instància de
+la classe <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:WebApp">WebApp</a></code> per al tipus <code>ForumsApp</code>.
+Aquesta classe defineix algunes funcionalitats bàsiques de l'aplicació i en el nostre cas no redefinim cap
+dels valors per defecte definits en la classe.</p>
+
+<!--p>En la instància de <code><a href="/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw.html#t:WebApp">WebApp</a></code>
+ la funció definida és la següent (la resta obtenen els seus valors per defecte definits en la classe):</p>
+<dl>
+ <dt><code>defaultLayout :: WidgetFor a () -> HandlerFor a Html</code></dt>
+     <dd>Obté la pàgina final a partir del contingut del <em>widget</em>, aplicant la plantilla de <em>layout</em>.
+      Aquesta funció és usada pels <em>handlers</em> per a obtenir el contingut HTML de la resposta a partir del <em>widgets</em> que generen.</dd>
+ </dl-->
+
+
+<h4 id="routing">Inici i enrutament</h4>
+
+<p>El mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/App.hs">Forums.App</a></code> conté la inicialització de l'aplicació i l'enrutament de les peticions.</p>
+
+<p>La inicialització consisteix en primer lloc en la creació del valor de <code>ForumsApp</code> amb tota les dades gobals a la aplicació.
+ En aquesta aplicació, aquesta dada és únicament una conexió amb la base de dades.</p>
+
+<p>Un cop construit el valor de <code>ForumsApp</code> s'usa la funció
+ <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw-Dispatch.html#v:toApp">toApp</a></code> que obté una aplicació WAI
+a partir de la funció d'enrutament. Aquesta funció determina quin handler executarà partir de la
+ ruta i el mètode HTTP de la petició.</p>
+
+<p>En el mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/App.hs">Forums.App</a></code> usarem la funció
+ <code><a href="http://soft0.upc.edu/dat/haddock/datfw-core-0.2.0.0/Develop-DatFw-Dispatch.html#v:toApp">toApp</a></code>
+ de la següent forma:</p>
+<pre class="bg-light">toApp ForumsApp{ forumsDb = db } $ \ route -&gt;
+    case route of
+        <em>patró-de-ruta</em> -&gt; selectMethod
+            [ onMethod "<em>mètode</em>" <em>handler</em>
+            , ...
+            ]
+        ...
+</pre>
+
+
+<h4 id="autenticacio">El sistema d'autenticació</h4>
+
+<p>Una autenticació bàsica dels usuaris (mecanismes de <em>login</em> i <em>logout</em>) ja es dona feta. Veieu
+en el mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Found.hs">Forums.Found</a></code> funcions per obtenir l'usuari autenticat
+en la sessió actual, i en el mòdul <code><a href="http://soft0.upc.edu/dat/dat-prj/forums-app/src/Forums/Handler.hs">Forums.Handler</a></code> els <em>handlers</em>
+corresponents a les accions de <em>login</em> i <em>logout</em>.</p>
+
+<!--div class="alert alert-warning" role="alert"> A més a més haureu de completar tot el codi corresponent a la funcionalitat
+de canvi de <em>password</em>: afegir la corresponent ruta, els corresponents <em>handlers</em> i les corresponents plantilles de vista.<br/>
+  <b>IMPORTANT</b>: Es posarà especial ènfasi en aquesta part durant l'avaluació.</div>
+</div-->
+
+
+</main><!-- .col-md-10 -->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga, Abril 2026</span>
+  </div>
+</footer>
+
+<!-- Optional JavaScript -->
+<!--script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script-->
+
+
+
+</body></html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://soft0.upc.edu/dat/prac-forums-spa/canvis-frontend.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - canvis-frontend_files/bootstrap.4.1.3.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - canvis-frontend_files/style-4.css">
+
+  <title>DAT. Pràctica 5</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/index.html">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-maq-expr/index.html">Pràctica 1</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Pràctica 5</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+  <nav class="nav sticky-top navbar-light bg-light nav-pills flex-column">
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Introducció</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/frontend.html">Frontend</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html">Servei de fòrums (API REST)</a>
+    <a class="nav-link active" href="http://soft0.upc.edu/dat/prac-forums-spa/canvis-frontend.html">Canvis</a>
+  </nav>
+</div>
+
+<main class="col-md">
+
+<p>Hi hagut canvis en el codi proveït del <em>frontend</em>:</p>
+
+<dl>
+  <dt><a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/">3 juny, 2026</a></dt>
+  <dd>
+    <p>Versió actual</p>
+    <ul>
+    <li>En la preparació del directori <code>public</code>, amb tot el contingut estàtic,
+      s'inclou l'enllaç simbòlic <code>topic.html</code> al fitxer <code>index.html</code>
+      (veieu l'objectiu <b>build</b> del fitxer <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/Makefile">Makefile</a>).<br>
+      Això fa que la pàgina del <em>frontend</em> es referencii amb les URLs
+      <code>http://localhost:8008/index.html</code> i <code>http://localhost:8008/topic.html</code>.</li>
+    <li>En el mòdul <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/ForumsApiSrv.hs">ForumsApiSrv</a> es defineix el tipus
+      <code>NewPost</code> (i les instàncies de les classes <code>ToJSON/ToJSON</code>) corresponent
+      al contingut de la petició en la creació d'un nou <em>post</em>.</li>
+    <li>S'ha completat el component arrel definit en el mòdul <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Main.hs">Main</a>.
+      Ara, la vista inclou (monta)  els components
+      <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Components/UserComponent.hs">Components.UserComponent</a>
+      i <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Pages/Topic.hs">Pages.Topic</a>, que abans no s'inclouien.<br>
+      El component <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Pages/Forum.hs">Pages.Forum</a> ara ja no monta el
+      <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Components/UserComponent.hs">Components.UserComponent</a>.<br>
+      Es defineix el component <a href="http://soft0.upc.edu/dat/prac-forums-spa/dat-prj-5/forums-frontend/src/Pages/Topic.hs">Pages.Topic</a> que l'estudiant
+      haurà de completar.</li>
+    <li>Els mòduls que defineixen components només exporten la funció <code>mkComp</code> i no exporten els tipus
+      <code>Model</code> i <code>Action</code>.<br> Observació: 
+      l'operació de montatge d'un component fill en la vista d'un component pare
+      (<a href="https://hackage-content.haskell.org/package/miso-1.9.0.0/docs/Miso.html#v:mount_">mount_</a> o
+      <a href="https://hackage-content.haskell.org/package/miso-1.9.0.0/docs/Miso.html#v:-43--62-">(+&gt;)</a>)
+      és polimòrfica i independent del tipus de model i acció del component fill.</li>
+    </ul>
+  </dd>
+
+  <dt><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-frontend-20260526/">26 maig, 2026</a></dt>
+  <dd>
+    <p>Versió inicial</p>
+  </dd>
+</dl>
+
+</main><!-- col-md-->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga, Maig 2026</span>
+  </div>
+</footer>
+
+
+
+
+
+</body></html>

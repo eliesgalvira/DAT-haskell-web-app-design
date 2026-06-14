@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>DAT. Pràctica 4</title>
+  <!--base href="../"-->
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend1_files/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend1_files/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://soft0.upc.edu/dat/practica4/">DAT. Pràctica 4</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Enunciat</a></li>
+        <!--li><a href="../treball.html">Entrega</a></li-->
+        <li class="active"><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html">Frontend</a></li>
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/canvis.html">Canvis</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://soft0.upc.edu/dat/">DAT</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica1/">Pràctica 1</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica2/">Pràctica 2</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica3/">Pràctica 3</a></li>
+      </ul>
+    </div><!-- .navbar-collapse -->
+  </div><!-- .container -->
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+<div class="sidebar-nav-fixed affix">
+<ul class="nav">
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1"><font color="red">1 - HTML dinàmic</font></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html">2 - Components</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html">3 - Accés al servei WEB</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html">4 - Múltiples vistes / <em>Routing</em></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html">5 - Autenticació. Navegació</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_last.html">6 - Formularis</a></li>
+</ul>
+</div>
+</div>
+
+<div class="col-md-10">
+<div class="page-header">
+  <h1>Desenvolupament del <em>frontend</em></h1>
+</div>
+
+<!--div class="alert alert-warning" role="alert">EN CONSTRUCCIÓ. Si us plau, recarregueu la pàgina per poder veure l'última versió.</div-->
+
+<p>En aquesta secció es descriurà, a través d'una sèrie de passos, el desenvolupament del <em>frontend</em>
+amb <a href="http://www.angularjs.org/" target="_blank"><strong>AngularJS</strong></a>.</p>
+
+<p>En el codi font proveit pel professor en l'<a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-spa.zip">arxiu de projecte</a>
+NO està inclòs el codi del <em>frontend</em>. Se us proposa que copieu el codi de l'últim d'aquests passos al direcori <code>src/frontend</code>
+del vostre projecte i completeu el desenvolupament amb tota la funcionalitat requerida.</p>
+
+
+<h2>Funcionament bàsic d'AngularJS</h2>
+
+<p>La següent figura mostra una aplicació <a href="http://www.angularjs.org/" target="_blank"><strong>AngularJS</strong></a> amb els seus components MVC.
+Un cop s'accedeix la pàgina HTML de l'aplicació, el codi JavaScript (model + controladors) i les plantilles (vistes)
+es carreguen en el dispositiu de l'usuari (navegador o móbil) i s'executa. El codi JavaScript serà el responsable de
+modificar dinàmicament la pàgina inicialment carregada.</p>
+
+<p>Com pot observar-se, part del model interacciona amb el servidor a través d'un servei WEB
+amb estil <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">REST</a>.</p>
+<figure>
+  <img src="./DAT. Pràctica 5 - frontend1_files/angularjs-mvc.png" alt="Modelo de aplicación con AngularJS" height="320" width="766" class="img-thumbnail">
+  <figcaption>Aplicació amb AngularJS</figcaption>
+</figure>
+
+
+<!------------------------------>
+<a name="step_1"></a>
+<h2>Primer pas: HTML dinàmic</h2>
+
+<ul doc-tutorial-nav="3" class="btn-group tutorial-nav">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_1"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_1.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_1" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+<p>En aquest primer pas construirem una pàgina dinàmica en la que es mostra una llista generada a partir de JS.</p>
+
+<p>La pàgina serà una plantilla AngularJS. Les plantilles són bàsicament pàgines HTML amb directives que AngularJS processarà,
+modificant el seu contingut i lligant accions a funcions del(s) controlador(s) de l'aplicació. En la pàgina, evidentment,
+caldrà incloure el codi d'AngularJS i el codi de l'aplicació.</p>
+
+<p>El primer que cal considerar es com s'inicia l'execució de l'aplicació (<em>bootstraping</em>).
+La forma més fàcil es usant la directiva <a href="https://docs.angularjs.org/api/ng/directive/ngApp">ngApp</a>
+en la plantilla de la pàgina. En aquest exemple s'usa la directiva en forma d'atribut:</p>
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_1/index.html"><strong>index.html:</strong></a></p>
+<pre><code class="lang-html">&lt;html ng-app="forumsApp"&gt;
+&lt;head&gt;
+...
+&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="app.js"&gt;&lt;/script&gt;
+...
+&lt;/head&gt;
+...
+&lt;/html&gt;
+</code></pre>
+
+<p>El valor de l'atribut <code>ng-app</code> és el nom del mòdul que es carrega i inicialitza.
+Aquesta directiva s'usa per indicar l'element que AngularJS considerarà com l'element arrel de la nostra aplicació.
+Això dona als desenvolupadors la llibertat de dir a AngularJS si la pàgina HTML sencera o només un troç ha de tractar-se com una aplicació AngularJS.</p>
+
+<h3>Vistes i plantilles</h3>
+
+<p>En AngularJS, la vista és una projecció del model a través de la plantilla HTML.
+Això vol dir que quan el model canvia, AngularJS refresca els corresponents punts de lligam (<em>binding points</em>), que modifiquen la vista.</p>
+
+<p>La vista és construida per AngularJS a partir de la següent plantilla:</p>
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_1/index.html"><strong>index.html:</strong></a></p>
+<pre><code class="lang-html">...
+&lt;body ng-controller="ForumListController"&gt;
+  ...
+  &lt;table class="table table-striped"&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Títol&lt;/th&gt;&lt;th&gt;Descripció&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr ng-repeat="t in forums"&gt;
+        &lt;td&gt;{{t.title}}&lt;/td&gt;&lt;td&gt;{{t.description}}&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+  ...
+&lt;/body&gt;
+...
+</code></pre>
+
+<p>Observeu la directiva <a href="https://docs.angularjs.org/api/ng/directive/ngController">ngController</a>,
+ que associa el controlador <code>ForumListController</code> a l'element <code>&lt;body&gt;</code>. Aleshores, AngularJS:</p>
+<ul>
+  <li><code>ForumListController</code> s'encarrega de controlar el subarbre DOM sota (i incloent-lo) l'element <code>&lt;body&gt;</code>.</li>
+  <li>Les expresions que hi ha a la plantilla (dins de directives o entre claudàtors) denoten lligams, que es refereixen al model de l'applicació,
+   i que està definit en el nostre controlador <code>ForumListController</code>.</li>
+</ul>
+
+<p>Observeu també la directiva <a href="https://docs.angularjs.org/api/ng/directive/ngRepeat">ngRepeat</a> i les dues expressions AngularJS:</p>
+<ul>
+  <li>L'atribut <code>ng-repeat="t in forums"</code> en l'element <code>&lt;tr&gt;</code> és una directiva AngularJS de repetició.
+  La directiva indica a AngularJS que creï un element <code>&lt;tr&gt;</code> per a cada fòrum en la llista, usant l'element <code>&lt;tr&gt;</code> com la plantilla.</li>
+  <li>Les expresions entre claudàtors (<code>{{t.title}}</code> i <code>{{t.description}}</code>) seràn sustituïdes pels valors de les expresions.</li>
+</ul>
+
+<h3>Model i Controladors</h3>
+
+<p>El model (un simple <em>array</em> de fòrums en notació literal) és instanciat dins del controlador <code>ForumListController</code>.
+ El controlador és simplement una funció constructora que té el <code>$scope</code> com a paràmetre:</p>
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_1/app.js"><strong>app.js:</strong></a></p>
+<pre>// Define the `forumsApp` module
+forumsApp = angular.module('forumsApp', []);
+
+// Define the `ForumListController` controller on the `forumsApp` module
+forumsApp.controller('ForumListController', function($scope) {
+    $scope.forums = [
+        { id: 1, title: "Fòrum de prova 1", description: "Aquest és un fòrum de prova." },
+        { id: 2, title: "Fòrum de prova 2", description: "Aquest és un fòrum de prova."},
+        { id: 3, title: "Fòrum de prova 3", description: "Aquest és un fòrum de prova."}
+    ];
+});
+</pre>
+
+<p>Hem declarat un controlador anomenat <code>ForumListController</code> i registrat en un mòdul AngularJS, <code>forumsApp</code>.
+ Observeu que la directiva <code>ngApp</code> (en l'element &lt;html&gt;) especifica el nom del mòdul <code>forumsApp</code>
+ com el mòdul a carregar quan es fa el <em>bootstrapping</em> de l'applicació.</p>
+
+<p>Encara que per ara fa poca cosa, el controlador juga un paper crucial. Oferint context per al nostre model de dades,
+ el controlador estableix un lligam (<em>data-binding</em>) entre el model i la vista.
+ Els aspectes de presentació, dades i lògica queden conectats de la següent manera:</p>
+<ul>
+    <li>La directiva <code>ngController</code>, en l'element <code>&lt;body&gt;</code>, referencia el nom del nostre controlador, <code>ForumListController</code>
+     (definit en el fitxer JavaScript <code>app.js</code>).</li>
+    <li>El controlador <code>ForumListController</code> adjunta les dades dels fòrums a l'àmbit <code>$scope</code> que s'injecta a la nostra funció controladora.
+     Aquest àmbit extén per prototipat l'àmbit arrel que s'ha creat quan l'aplicació ha sigut inicialitzada.
+     Aquest àmbit del controlador és el de tots els lligams dins de l'element <code>&lt;body ng-controller="ForumListController"&gt;</code>.</li>
+</ul>
+
+<h3>Àmbits (<em>Scopes</em>)</h3>
+
+<p>El concepte d'<em>scope</em> en AngularJS és crucial. Un <em>scope</em> es pot veure com el pegament que permet que la plantilla, el model i el controlador operin conjuntament.
+ AngularJS usa els <em>scopes</em> per mantenir els models i les vistes separats però amb sincronia.
+ Qualsevol canvi en el model queda reflectit en la vista; qualsevol canvi que succeeix en la vista queda reflectit en el model.</p>
+
+<p>Per saber més sobre els <em>scopes</em> d'AngularJS, veieu la <a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope">documentació d'AngularJS</a>.</p>
+
+<p>
+  <img src="./DAT. Pràctica 5 - frontend1_files/step_1-scopes.png" alt="Scopes" class="img-thumbnail">
+</p>
+
+<div class="alert alert-warning">
+  <p>Els <em>scopes</em> d'AngularJS extenen per prototipat el <em>scope</em> pare, cap amunt fins el <em>root scope</em> creat per l'aplicació.
+   Per tant, assignant valors directament als <em>scopes</em> fàcilment podem compartir dades entre diferents parts de la pàgina i crear aplicacions interactives.
+   Encara que aquest plantejament funciona per a aplicacions petites, en canvi ens porta a una acoplament massa fort entre les parts
+   i a una dificultat per a raonar sobre els canvis en el model.
+  </p>
+  <p>
+    En el següent pas, aprendrem com organitzar millor el nostre codi,
+    empaquetant diferents parts relacionades en entitats aïllades i reutilitzables, anomenades <strong>components</strong>.
+  </p>
+</div>
+
+
+<ul doc-tutorial-nav="3" class="btn-group tutorial-nav">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_1"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_1.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_1" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+
+</div><!-- col-md-10-->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"><!--//--></div>
+        <div class="col-md-4">Jordi Forga, Desembre 2019</div>
+      </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./DAT. Pràctica 5 - frontend1_files/jquery.min.js.download"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./DAT. Pràctica 5 - frontend1_files/bootstrap.min.js.download"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./DAT. Pràctica 5 - frontend1_files/ie10-viewport-bug-workaround.js.download"></script>
+
+
+
+
+
+</body></html>

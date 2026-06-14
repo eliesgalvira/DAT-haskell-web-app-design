@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>DAT. Pràctica 4</title>
+  <!--base href="../"-->
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend3_files/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend3_files/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://soft0.upc.edu/dat/practica4/">DAT. Pràctica 4</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Enunciat</a></li>
+        <!--li><a href="../treball.html">Entrega</a></li-->
+        <li class="active"><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html">Frontend</a></li>
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/canvis.html">Canvis</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://soft0.upc.edu/dat/">DAT</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica1/">Pràctica 1</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica2/">Pràctica 2</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica3/">Pràctica 3</a></li>
+      </ul>
+    </div><!-- .navbar-collapse -->
+  </div><!-- .container -->
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+<div class="sidebar-nav-fixed affix">
+<ul class="nav">
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1">1 - HTML dinàmic</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html">2 - Components</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html"><font color="red">3 - Accés al servei WEB</font></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html">4 - Múltiples vistes / <em>Routing</em></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html">5 - Autenticació. Navegació</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_last.html">6 - Formularis</a></li>
+</ul>
+</div>
+</div>
+
+<div class="col-md-10">
+
+<!--div class="alert alert-warning" role="alert">EN CONSTRUCCIÓ. Si us plau, recarregueu la pàgina per poder veure l'última versió.</div-->
+
+<!------------------------------>
+<a name="step_3"></a>
+<h2>Tercer pas: Accés al servei WEB del fòrum</h2>
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_3"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_3" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+<p>En aquest pas, canviarem la manera com la nostra aplicació obté les dades.</p>
+<ul>
+  <li>Definirem un servei <code>forumApiSrv</code> que representa un client
+   <a href="https://en.wikipedia.org/wiki/Representational_State_Transfer">RESTful</a> del servei WEB
+   oferit pel <em>backend</em> del fòrum.
+   Amb aquest client podrem fer sol·licituds de dades al servidor de manera senzilla,
+   sense haver de tractar els detalls de l’API, com els mètodes HTTP i les URLs.</li>
+  <li>Realitzarem aquest servei mitjançant un servei de nivell inferior,
+   integrat en AngularJS anomenat <a href="https://docs.angularjs.org/api/ng/service/$http">$http</a>.</li>
+  <li>Utilitzarem la <a href="https://docs.angularjs.org/guide/di">injecció de dependència (DI)</a> d’AngularJS,
+   tant per proporcionar el nostre servei <code>forumApiSrv</code> al controlador del component <code>forumList</code>,
+   com per proporcionar el servei inferior <code>$http</code> d'AngularJS al nostre servei.</li>
+  <li>Utilitzarem la injecció de dependència també per proporcionar constants
+   (URLs del servei WEB, d'autenticació, etc.) a les diferents parts
+  de l'aplicació, obtenint una aplicació fàcilment configurable.</li>
+</ul>
+
+
+<!-- TODO:
+<h3 id="dependencies">Dependències</h3>
+-- end of TODO  -->
+
+
+<h3 id="service">Definició de serveis</h3>
+
+<p>En primer lloc, usem l'API dels <a href="https://docs.angularjs.org/api/ng/type/angular.Module">mòduls d'AngularJS</a> per:</p>
+<ul>
+  <li>Amb el mètode <a href="https://docs.angularjs.org/api/ng/type/angular.Module#constant">constant</a>,
+  registrar un objecte amb els paràmetres de configuració de l'aplicació.  
+  Els arguments són el nom del servei <code>'config'</code> i el valor.</li>
+  <li><p>Amb el mètode <a href="https://docs.angularjs.org/api/ng/type/angular.Module#constant">service</a>,
+  registrar un nou servei mitjançant una funció constructora (dins la funció, <code>this</code>
+  es referirà al nou servei). Aquest servei proporciona les funcions que accedeixen l'API del <em>webservice</em> oferit pel <em>backend</em> del fòrum.</p>
+  <p>Els arguments són el nom del servei <code>'forumApiSrv'</code> i la funció constructora.
+  Observeu com es declaren dues injeccions de dependències mitjançant arguments de la funció constructora:</p>
+  <ul>
+    <li><code>config</code>: Dependència amb l'objecte registrat de paràmetres de configuració.</li>
+    <li><code>$http</code>: Dependència amb el servei $http.  <a href="https://docs.angularjs.org/api/ng/service/$http">$http</a> és
+     el servei preregistrat d'AngularJS que permet fer peticions a servidors HTTP des del codi <em>JavaScript</em>.  </li>
+  </ul>
+  </li>
+</ul>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_3/app.js"><strong>app.js:</strong></a></p>
+<pre>// Define the `forumsApp` module
+angular.module('forumsApp', []);
+
+// Register the `config` object in the `forumsApp` module. Provides the configuration params.
+angular.module('forumsApp').
+  constant('config',
+    { apiUrl: 'http://soft0.upc.edu/~USER/practica4/forum-backend.cgi/api'
+    }
+  );
+</pre>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_3/forum-api.service.js"><strong>forum-api.service.js:</strong></a></p>
+<pre>// Register the `forumApiSrv` service in the `forumsApp` module.
+// Provides the access to the Forum Web Service.
+angular.module('forumsApp').
+  service('forumApiSrv', function(config, $http) {
+    this.getForums = function() {
+        return $http.get(config.apiUrl + '/forums').then(
+            function (result) { return result.data; }
+        );
+    };
+  });
+</pre>
+
+
+<!--h3 id="component-controllers">Component Controllers</h3>
+
+<p>We can now simplify our component controllers (<code><span class="typ">PhoneListController</span></code> and <code><span class="typ">PhoneDetailController</span></code>) by
+factoring out the lower-level <code><span class="pln">$http</span></code> service, replacing it with the new <code><span class="typ">Phone</span></code> service.
+AngularJS's <code><span class="pln">$resource</span></code> service is easier to use than <code><span class="pln">$http</span></code> for interacting with data sources
+exposed as RESTful resources. It is also easier now to understand what the code in our controllers
+is doing.</p>
+
+<p>Notice how in <code><span class="typ">PhoneListController</span></code> we replaced:</p>
+
+<pre><code class="lang-js"><span class="pln">$http</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">'phones/phones.json'</span><span class="pun">).</span><span class="pln">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  self</span><span class="pun">.</span><span class="pln">phones </span><span class="pun">=</span><span class="pln"> response</span><span class="pun">.</span><span class="pln">data</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>with just:</p>
+
+<hr-->
+
+
+<h3 id="component-controller">Us dels serveis</h3>
+
+<p>Utilitzarem el servei <code>forumApiSrv</code> en el nostre controlador per
+fer les peticions i obtenir la llista de fòrums al nostre servidor WEB.
+AngularJS injecta els serveis per vosaltres, allà on els necessiteu.</p>
+
+<p>Els serveis estan gestionats pel <a href="https://docs.angularjs.org/guide/di">subsistema DI</a> d'AngularJS.
+La injecció de dependència ajuda a que les vostres aplicacions WEB estiguin ben estructurades
+ (per exemple, entitats separades per a la presentació, dades i control) i siguin dèbilment acoblades
+ (les dependències entre entitats no són resoltes per les mateixes entitats, sinó pel subsistema DI).
+ Com a resultat, les aplicacions són més fàcils de provar també.</p>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_3/forum-list.component.js"><strong>forum-list.component.js:</strong></a></p>
+<pre>angular.module('forumsApp').
+  component('forumList', {
+    templateUrl: 'forum-list.template.html',
+    controller: function(forumApiSrv) {
+      var self = this;
+      self.forums = [];
+
+      forumApiSrv.getForums().then(function(data) {
+        self.forums = data.items;
+      });
+    }
+  });
+</pre>
+
+<!-- TODO:
+<p>$ http realitza una sol·licitud GET HTTP al nostre servidor web i sol·licita phones.json (l’URL és relativa al nostre fitxer index.html). El servidor respon proporcionant les dades al fitxer JSON. (La resposta pot ser que també hagi estat generat dinàmicament per un servidor backend. Al navegador i a la nostra aplicació, tots dos semblen iguals. Per senzillesa, utilitzarem fitxers JSON en aquest tutorial.)
+
+El servei $ http retorna un objecte promès, que té un mètode (). Anomenem aquest mètode per gestionar la resposta asíncrona i assignar les dades del telèfon al controlador, com a propietat anomenada telèfons. Fixeu-vos que AngularJS va detectar la resposta JSON i ens la va analitzar a la propietat de dades de l’objecte de resposta passat a la nostra devolució de trucades.
+
+Com que assignem la propietat dels telèfons en una funció de devolució, on aquest valor no està definit, també introduïm una variable local anomenada auto que apunta a la instància del controlador.
+
+Per utilitzar un servei a AngularJS, només heu de declarar els noms de les dependències que necessiteu com a arguments per a la funció constructora del controlador, de la manera següent:</p>
+
+<p><code><span class="pln">$http</span></code> makes an HTTP GET request to our web server, asking for <code><span class="pln">phones</span><span class="pun">.</span><span class="pln">json</span></code> (the URL is relative
+to our <code><span class="pln">index</span><span class="pun">.</span><span class="pln">html</span></code> file). The server responds by providing the data in the JSON file.
+(The response might just as well have been dynamically generated by a backend server. To the
+browser and our app, they both look the same. For the sake of simplicity, we will use JSON files
+in this tutorial.)</p>
+
+<p>The <code><span class="pln">$http</span></code> service returns a <a href="api/ng/service/$q">promise object</a>, which has a <code><span class="kwd">then</span><span class="pun">()</span></code> method. We call
+this method to handle the asynchronous response and assign the phone data to the controller, as a
+property called <code><span class="pln">phones</span></code>. Notice that AngularJS detected the JSON response and parsed it for us into
+the <code><span class="pln">data</span></code> property of the <code><span class="pln">response</span></code> object passed to our callback!</p>
+
+<p>Since we are making the assignment of the <code><span class="pln">phones</span></code> property in a callback function, where the <code><span class="kwd">this</span></code>
+value is not defined, we also introduce a local variable called <code><span class="kwd">self</span></code> that points back to the
+controller instance.</p>
+
+<p>To use a service in AngularJS, you simply declare the names of the dependencies you need as arguments
+to the controller's constructor function, as follows:</p>
+
+<pre><code class="lang-js"><span class="kwd">function</span><span class="pln"> </span><span class="typ">PhoneListController</span><span class="pun">(</span><span class="pln">$http</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{...}</span></code></pre>
+-- end of TODO  -->
+
+<p>L’injector de dependència d’AngularJS proporciona serveis al vostre controlador quan es construeix el controlador.
+L’injector de dependència també s’ocupa de crear qualsevol dependència transitòria que pugui tenir el servei,
+ja que és freqüent que els serveis depenguin d’altres serveis
+(en la nostra aplicació, per exemple, podem observar com el servei <code>forumApiSrv</code> depèn dels serveis <code>config</code> i <code>$http</code>).</p>
+
+<p>Tingueu en compte que els noms dels arguments són significatius, ja que l'injector els utilitza per cercar les dependències.</p>
+
+
+<h3 id="-prefix-naming-convention">Convenció de noms amb prefix <code>$</code></h3>
+
+<p>Podeu crear els vostres propis serveis amb qualsevol nom, però s'aconsella que
+no comencin amb el prefix <code>$</code>.</p>
+
+<p>Com a convenció, els serveis integrats d'AngularJS, els mètodes de <em>scope</em>
+i alguns altres APIs d'AngularJS tenen el prefix <code>$</code> davant del nom.</p>
+
+<p>El prefix <code>$</code> s'utilitza per proporcionar un espai de noms als serveis d'AngularJS.
+Per evitar col·lisions el millor és evitar posar noms als vostres serveis i models que comencin per <code>$</code>.</p>
+
+<p>Si inspeccioneu una mica, també observareu algunes propietats que comencen amb <code>$$</code>.
+Aquestes propietats es consideren privades i no s’han d’accedir ni modificar.</p>
+
+
+<h3 id="a-note-on-minification">Nota sobre la reducció de tamany (<em>minification</em>) del codi</h3>
+
+<p>Com que AngularJS infereix les dependències dels controladors i serveis a partir dels noms d’arguments de la funció constructora,
+si <a href="https://en.wikipedia.org/wiki/Minification_(programming)">reduïu o minimitzeu</a> el codi JavaScript,
+tots els arguments de les funcions també es podrien minimitzar
+i l’injector de dependència no seria capaç de identificar els serveis correctament.</p>
+
+<p>Podem superar aquest problema anotant la funció amb els noms de les dependències, proporcionades com a cadenes, que no es poden minimitzar.
+Hi ha dues maneres de proporcionar aquestes anotacions d'injecció:</p>
+<ul>
+  <li><p>Creeu una propietat <code>$inject</code> en la funció controladora que conté una matriu de cadenes.
+  Cada cadena de la matriu és el nom del servei a injectar per al paràmetre corresponent. En el nostre exemple, escriuriem:</p>
+<pre><code class="lang-js"><span class="kwd">function</span><span class="pln"> </span><span class="typ">ForumListController</span><span class="pun">(</span><span class="pln">forumApiSrv</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{...}</span><span class="pln">
+</span><span class="typ">ForumListController</span><span class="pun">.</span><span class="pln">$inject </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[</span><span class="str">'forumApiSrv'</span><span class="pun">];</span><span class="pln">
+</span><span class="pun">...</span><span class="pln">
+</span><span class="pun">.</span><span class="pln">component</span><span class="pun">(</span><span class="str">'forumList'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{...,</span><span class="pln"> controller</span><span class="pun">:</span><span class="pln"> </span><span class="typ">ForumListController</span><span class="pun">, ...});</span></code></pre>
+</li>
+  <li><p>Feu servir una anotació en línia on, en lloc de només proporcionar la funció, proporcioneu una matriu.
+  Aquesta matriu conté una llista dels noms del servei, seguida de la mateixa funció com a darrer element de la matriu.</p>
+<pre><code class="lang-js"><span class="kwd">function</span><span class="pln"> </span><span class="typ">ForumListController</span><span class="pun">(</span><span class="pln">forumApiSrv</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{...}</span><span class="pln">
+</span><span class="pun">...</span><span class="pln">
+</span><span class="pun">.</span><span class="pln">component</span><span class="pun">(</span><span class="str">'forumList'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{...,</span><span class="pln"> controller</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'forumApiSrv'</span><span class="pun">,</span><span class="pln"> </span><span class="typ">ForumListController</span><span class="pun">], ...});</span></code></pre>
+</li>
+</ul>
+
+<p>Ambdós mètodes funcionen amb qualsevol funció que pugui injectar AngularJS, de manera que correspon a la guia d'estil del vostre projecte decidir quina s'utilitza.</p>
+
+<p>Quan s'utilitza el segon mètode, és habitual proporcionar la funció constructora en línia, quan es registra el controlador o servei:</p>
+<pre><code class="lang-js"><span class="pun">.</span><span class="pln">component</span><span class="pun">(</span><span class="str">'forumList'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{...,</span><span class="pln"> controller</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'forumApiSrv'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="pln">forumApiSrv</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{...}], ...});</span></code></pre>
+
+<p>A partir d'ara, en el tutorial utilitzarem el mètode en línia.</p>
+
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_3"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_3" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+
+</div><!-- col-md-10-->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"><!--//--></div>
+        <div class="col-md-4">Jordi Forga, Desembre 2019</div>
+      </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./DAT. Pràctica 5 - frontend3_files/jquery.min.js.download"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./DAT. Pràctica 5 - frontend3_files/bootstrap.min.js.download"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./DAT. Pràctica 5 - frontend3_files/ie10-viewport-bug-workaround.js.download"></script>
+
+
+
+
+
+</body></html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>DAT. Pràctica 4</title>
+  <!--base href="../"-->
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend2_files/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - frontend2_files/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="http://soft0.upc.edu/dat/practica4/">DAT. Pràctica 4</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Enunciat</a></li>
+        <!--li><a href="../treball.html">Entrega</a></li-->
+        <li class="active"><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html">Frontend</a></li>
+        <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/canvis.html">Canvis</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://soft0.upc.edu/dat/">DAT</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica1/">Pràctica 1</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica2/">Pràctica 2</a></li>
+        <li><a href="http://soft0.upc.edu/dat/practica3/">Pràctica 3</a></li>
+      </ul>
+    </div><!-- .navbar-collapse -->
+  </div><!-- .container -->
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+<div class="sidebar-nav-fixed affix">
+<ul class="nav">
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1">1 - HTML dinàmic</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.html"><font color="red">2 - Components</font></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html">3 - Accés al servei WEB</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_4.html">4 - Múltiples vistes / <em>Routing</em></a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_5.html">5 - Autenticació. Navegació</a></li>
+  <li><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_last.html">6 - Formularis</a></li>
+</ul>
+</div>
+</div>
+
+<div class="col-md-10">
+
+<!------------------------------>
+<a name="step_2"></a>
+<h2>Segón pas: Components</h2>
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_2"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_2" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+<p>En el pas anterior hem vist com un controlador i una plantilla treballen junts per convertir una pàgina HTML
+en una vista dinàmica.
+Aquest és un patró molt comú en les applicacions de pàgina única (<em>Single-Page Applications</em>) en general
+(i en les aplicacions AngularJS en particular):</p>
+<ul>
+  <li>En lloc de crear una pàgina HTML estàtica en el servidor, el codi de costat client agafa el control
+  i interactua dinàmicament amb la vista, modificant-la inmediatament per visualitzar els canvis en
+  les dades del model ó estat, usualment com a resultat de la interacció de l'usuari.</li>
+</ul>
+
+<p>La <strong>plantilla</strong> (la part de la vista que conté els lligams i la lògica de presentació) indica
+com les dades han de ser organitzades i presentades a l'usuari.
+
+El <strong>controlador</strong> ofereix el context en el que els lligams són avaluats i aplica el comportament i la lògica
+a la nostra plantilla.</p>
+
+<p>Ara bé, hi ha alguns aspectes que es poden estructurar millor:</p>
+<ol>
+  <li>Com podem reutilitzar la mateixa funcionalitat en diferents parts de l'aplicació ?<br>
+  Precisariem duplicar la plantilla sencera, inclòs el controlador !
+  Aquesta estratègia és propensa a errors i dificulta el manteniment.</li>
+  <li>
+   <p>El <em>scope</em>, que uneix el controlador i la plantilla en una vista dinàmica, no està aïllat
+   d'altres parts de la pàgina. Això vol dir que qualsevol canvi en una altra part de la pàgina no relacionada directament
+   (un conflicte en el nom d'alguna propietat, per exemple) podria tenir efectes laterals en la nostra vista inesperats i difícils de depurar.</p>
+   <p>(Bé, això poder no és un problema en la nostra petita aplicació, però sí que ho és en complexes aplicacions del món real.)</p>
+  </li>
+</ol>
+
+<h3>Components</h3>
+
+<p>Ja que aquesta combinació (plantilla + controlador) és un patró tant comú i usat, AngularJS
+ofereix una manera fàcil i concisa de combinar ambdós en entitats reusables i aïllades, conegudes com <em>components</em>.
+A més a més, AngularJS crea <em>scopes</em> aïllats per a cada instància de component,
+lo que significa que no hi ha herència per prototipat i, per tant, no hi ha risc de que els nostres components puguin
+afectar altres parts de l'applicació i viceversa.</p>
+
+<p>Per a crear un component, s'usa el mètode <a href="https://docs.angularjs.org/api/ng/type/angular.Module#component">.component()</a> d'un
+<a href="https://docs.angularjs.org/guide/module">mòdul AngularJS</a>. Cal indicar el nom del component i la seva definició ó CDO (<em>Component
+Definition Object</em>).</p>
+
+<p>Els components són també directives i per tant el nom del component és en estil <code>camelCase</code>
+(p.ex. <code>myAwesomeComponent</code>), però usarem l'estil <code>kebab-case</code> (p.ex. <code>my-awesome-component</code>) quan ens hi
+referim en la nostra plantilla HTML.
+(Veieu <a href="https://en.wikipedia.org/wiki/Letter_case#Special_case_styles">aquí</a> una descripció dels diferents estils.)</p>
+
+<p>Veiem un exemple:</p>
+<pre>angular.
+  module('myApp').
+  component('greetUser', {
+    template: 'Hello, {{$ctrl.user}}!',
+    controller: function GreetUserController() {
+      this.user = 'world';
+    }
+  });
+</pre>
+<pre>&lt;body&gt;
+  &lt;!-- The following line is how to use the `greetUser` component above in your html doc. --&gt;
+  &lt;greet-user&gt;&lt;/greet-user&gt;
+&lt;/body&gt;
+</pre>
+
+<p>Cada cop que que inclüim <code>&lt;greet-user&gt;&lt;/greet-user&gt;</code> en la nostra vista, AngularJS expandirà a un subarbre
+DOM constrüit a partir de la <strong>plantilla</strong> i controlat per una instància del <strong>controlador</strong> especificats
+per les les propietats <strong>template</strong> i <strong>controller</strong> del CDO.</p>
+
+<p>Un moment però, d'on ve el nom <code>$ctrl</code> i a què s'està referint ?</p>
+
+<p>Per raons que ja s'han mencionat (i altres motius que surten de l'abast d'aquesta guia),
+es considera una bona pràctica evitar l'us del <em> scope</em> directament. Es pot (i és lo recomanable)
+usar la instància del controlador, és a dir, assignar les dades i les funcions a propietats del controlador (el "<code>this</code>"
+dins del constructor del controlador), en lloc de directament al <em>scope</em>.</p>
+
+<p>En la plantilla, ens referirem a la instància de controlador usant un alias. D'aquesta manera, el context
+d'avaluació de les expressions és força més clar. Per defecte, els components usen <code>$ctrl</code> com a àlias a l'instància,
+però això és configurable (definint la corresponent propietat del CDO).</p>
+
+<p>Hi ha més opcions a l'abast, per tant és aconsellable que visiteu el <a href="https://docs.angularjs.org/api/ng/provider/$compileProvider#component">API Reference</a>
+abans d'usar components en les vostres applicacions.</p>
+
+<h3 id="using-components">Usant Components</h3>
+
+<p>Ara que ja sabem com crear components, anem a modificar la pàgina del pas anterior introdüint els nous coneixements adquirits.</p>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_2/index.html"><strong>index.html:</strong></a></p>
+<pre>&lt;html ng-app="forumsApp"&gt;
+&lt;head&gt;
+  ...
+  &lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript" src="app.js"&gt;&lt;/script&gt;
+  &lt;script type="text/javascript" src="forum-list.component.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- This tells AngularJS to instantiate a `forumList` component here. --&gt;
+  &lt;forum-list&gt;&lt;/forum-list&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_2/app.js"><strong>app.js:</strong></a></p>
+<pre>angular.module('forumsApp', []);
+</pre>
+
+<p><a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_2/forum-list.component.js"><strong>forum-list.component.js:</strong></a></p>
+<pre>// Define the `forumList` component on the `forumsApp` module,
+// along with its associated controller and template.
+angular.
+  module('forumsApp').
+    component('forumList', { // This name is what AngularJS uses to match to the `&lt;forum-list&gt;` element.
+      template:
+        '&lt;h2&gt;Forum&lt;/h2&gt;' +
+        '&lt;table class="table table-striped"&gt;' +
+          '&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Títol&lt;/th&gt;&lt;th&gt;Descripció&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;' +
+          '&lt;tbody&gt;' +
+            '&lt;tr ng-repeat="t in $ctrl.forums"&gt;' +
+              '&lt;td&gt;{{t.title}}&lt;/td&gt;&lt;td&gt;{{t.description}}&lt;/td&gt;' +
+            '&lt;/tr&gt;' +
+          '&lt;/tbody&gt;' +
+        '&lt;/table&gt;',
+      controller: function() {
+        this.forums = [
+            { id: 1, title: "Fòrum de prova 1", description: "Aquest és un fòrum de prova." },
+            { id: 2, title: "Fòrum de prova 2", description: "Aquest és un fòrum de prova."},
+            { id: 3, title: "Fòrum de prova 3", description: "Aquest és un fòrum de prova."}
+        ];
+      }
+    });
+</pre>
+
+<p>Et voilà! La sortida resultant és la mateixa, però observem quines són les millores obtingudes:</p>
+<ul>
+  <li>La nostra llista de fòrums es reusable. Simplement introdüint <code>&lt;forum-list&gt;&lt;/forum-list&gt;</code> en qualsevol lloc de la pàgina,
+  obtenim una llista de fòrums.</li>
+  <li>La nostra vista principal (<code>index.html</code>) és més neta i declarativa.
+  Només mirant-la, sabem que hi ha una llista de fòrums. No ens molesten els detalls de la implementació.</li>
+  <li>El nostre component està aïllat i protegit de les "influències externes".
+  Així doncs, no ens haurem de preocupar per que, en alguna altra part de l'aplicació, es pugui trencar accidentalment.
+  El que passa dins del nostre component, queda dins del nostre component.</li>
+  <li>És més fàcil provar el nostre component de forma aïllada.</li>
+</ul>
+
+<p>
+  <img src="./DAT. Pràctica 5 - frontend2_files/step_2-scopes.png" alt="Component scopes" class="img-thumbnail">
+</p>
+
+<div class="alert alert-info">
+ <p><strong>Una nota sobre els noms de fitxers:</strong></p>
+ <p>És una bona pràctica distingir fitxers amb diferents tipus d’entitats pel seu sufix.
+  En aquest tutorial, utilitzem el sufix <code>.component</code> per a components, de manera que la definició d'un
+  component <code>someComponent</code> seria en un fitxer anomenat <code>some-component.component.js</code>.</p>
+</div>
+
+
+<ul class="btn-group">
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html#step_1"><li class="btn btn-primary"><i class="glyphicon glyphicon-step-backward"></i> Pas previ</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src.browse/step_2"><li class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> Codi (navega)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_2.zip"><li class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Codi (ZIP)</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/src/step_2" target="run-win"><li class="btn btn-primary"><i class="glyphicon glyphicon-play"></i> Executa</li></a>
+  <a href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/step_3.html"><li class="btn btn-primary">Pas següent <i class="glyphicon glyphicon-step-forward"></i></li></a>
+</ul>
+
+
+</div><!-- col-md-10-->
+
+</div><!-- .row -->
+</div><!-- .container -->
+
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"><!--//--></div>
+        <div class="col-md-4">Jordi Forga, Desembre 2019</div>
+      </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./DAT. Pràctica 5 - frontend2_files/jquery.min.js.download"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="./DAT. Pràctica 5 - frontend2_files/bootstrap.min.js.download"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./DAT. Pràctica 5 - frontend2_files/ie10-viewport-bug-workaround.js.download"></script>
+
+
+
+
+
+</body></html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="./DAT. Pràctica 5 - forums-api_files/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./DAT. Pràctica 5 - forums-api_files/style-4.css">
+  <!--link rel="stylesheet" type="text/css" href="style.css"-->
+
+  <title>DAT. Pràctica 5</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+  <a class="navbar-brand" href="http://soft0.upc.edu/dat/">DAT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-maq-expr/index.html">Pràctica 1</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-mvu/index.html">Pràctica 2</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-intro-web/index.html">Pràctica 3</a></li>
+      <li class="nav-item"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums/index.html">Pràctica 4</a></li>
+      <li class="nav-item active"><a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Pràctica 5</a></li>
+    </ul>
+  </div><!-- .navbar-collapse -->
+  </div>
+</nav>
+
+<div class="container">
+<div class="row">
+
+<div class="col-md-2">
+  <nav class="nav sticky-top navbar-light bg-light nav-pills flex-column">
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/index.html">Introducció</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/tutorial/index.html">Frontend</a>
+    <a class="nav-link active" href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html">Servei de fòrums (API REST)</a>
+    <a class="nav-link" href="http://soft0.upc.edu/dat/prac-forums-spa/canvis-frontend.html">Canvis</a>
+<!--
+  <a class="nav-link" href="index.html">Introducció</a>
+  <a class="nav-link" href="arquitectura.html">Arquitectura</a>
+  <a class="nav-link" href="auth-server.html">Servidor d'autorització</a>
+  <a class="nav-link active" href="forums-api.html">Servei de fòrums (API)</a>
+  <a class="nav-link" href="tutorial/index.html">Client (SPA)</a>
+-->
+  </nav>
+</div>
+
+<main class="col-md">
+
+<h2 id="webservice">API del servei de fòrums</h2>
+
+<p>El servei és accedit amb URLs que tenen la forma <code>http://localhost:5001/api<mark>/PATH_INFO</mark></code>
+on el <mark>PATH_INFO</mark>, mètode HTTP i els continguts JSON de petició i resposta es descriuen en la següent taula.</p>
+<table class="table table-striped">
+    <thead><tr>
+      <th><mark>/PATH_INFO</mark></th>
+      <th>Mètode HTTP</th>
+      <th></th>
+    </tr></thead>
+<tbody>
+  <tr>
+    <td>/user</td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté informació de l'usuari autenticat en la sessió</dd>
+      <dt>Resposta JSON</dt>   <dd>{ name: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MBUNAME</a></em> }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums</td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté la lista de fòrums</dd>
+      <dt>Resposta JSON</dt>   <dd>{ items: [ <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">FORUM</a></em>, ... ] }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums</td> <td>POST</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Crea un fòrum nou. L'usuari autenticat serà el moderador del nou fòrum</dd>
+      <dt>Autorizat a</dt>     <dd>Usuaris autenticats</dd>
+      <dt>Petició JSON</dt>    <dd>{ title: <em>String</em>, description: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MARKDOWN</a></em> }</dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">FORUM</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums/<mark>fid</mark></td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté el fòrum <mark>fid</mark></dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">FORUM</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums/<mark>fid</mark></td> <td>DELETE</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Elimina un fòrum i totes les seves qüestions i respostes</dd>
+      <dt>Autorizat a</dt>     <dd>Cal que l'usuari autenticat sigui el moderador del fòrum</dd>
+      <dt>Resposta JSON</dt>   <dd>{ }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums/<mark>fid</mark>/topics</td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté la lista de qüestions d'un fòrum</dd>
+      <dt>Resposta JSON</dt>   <dd>{ items: [ <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">TOPIC</a></em>, ... ] }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/forums/<mark>fid</mark>/topics</td> <td>POST</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Crea una qüestió</dd>
+      <dt>Autorizat a</dt>   <dd>Usuaris autenticats</dd>
+      <dt>Petició JSON</dt>    <dd>{ title: <em>String</em>, message: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MARKDOWN</a></em> }</dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">TOPIC</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/topics/<mark>tid</mark></td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté la qüestió (<em>topic</em>) <mark>tid</mark></dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">TOPIC</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/topics/<mark>tid</mark></td> <td>DELETE</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Elimina una qüestió i totes les seves respostes</dd>
+      <dt>Autorizat a</dt>     <dd>Cal que l'usuari autenticat sigui el moderador del fòrum al qual pertany el <em>topic</em></dd>
+      <dt>Resposta JSON</dt>   <dd>{ }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/topics/<mark>tid</mark>/posts</td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté la lista de respostes (<em>posts</em>) d'una qüestió (<em>topic</em>)</dd>
+      <dt>Resposta JSON</dt>   <dd>{ items: [ <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">POST</a></em>, ... ] }</dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/topics/<mark>tid</mark>/posts</td> <td>POST</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Crea una resposta</dd>
+      <dt>Autorizat a</dt>     <dd>Usuaris autenticats</dd>
+      <dt>Petició JSON</dt>    <dd>{ message: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MARKDOWN</a></em> }</dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">POST</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/posts/<mark>pid</mark></td> <td>GET</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Obté una resposta</dd>
+      <dt>Resposta JSON</dt>   <dd><em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">POST</a></em></dd>
+    </dl></td>
+  </tr>
+  <tr>
+    <td>/posts/<mark>pid</mark></td> <td>DELETE</td>
+    <td><dl class="dl-horizontal">
+      <dt>Descripció</dt>      <dd>Elimina una resposta</dd>
+      <dt>Autorizat a</dt>     <dd>Cal que l'usuari autenticat sigui el moderador del fòrum al qual pertany el <em>post</em></dd>
+      <dt>Resposta JSON</dt>   <dd>{ }</dd>
+    </dl></td>
+  </tr>
+</tbody>
+</table>
+
+<p>on s'han usat variables per als paràmetres:</p>
+<ul>
+  <li><mark>fid</mark>: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">FID</a></em></li>
+  <li><mark>tid</mark>: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">TID</a></em></li>
+  <li><mark>pid</mark>: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">PID</a></em></li>
+</ul>
+
+<p>i variables per als tipus següents:</p>
+<a name="typevars"></a>
+<ul>
+  <li><em>MBUNAME</em> = <em>Null</em> (si no s'ha autenticat en la sessió) ó
+    <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em> (nom de l'usuari autenticat)</li>
+  <li><em>USERNAME</em> = <em>String</em></li>
+  <li><em>URL</em> = <em>String</em></li>
+  <li><em>FID</em>, <em>TID</em>, <em>PID</em> = <em>Number</em></li>
+  <li><em>DATE</em> = <em>String</em> (dia i hora en format ISO-8601)</li>
+  <li><em>MARKDOWN</em> = <em>String</em> (text Markdown)</li>
+  <li><em>FORUM</em> = { id: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">FID</a></em>,
+                         selfLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         moderator: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em>,
+                         title: <em>String</em>,
+                         category: <em>String</em>,
+                         description: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MARKDOWN</a></em>,
+                         created: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">DATE</a></em>,
+                         topicsLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         topicsCount: <em>Number</em>,
+                         postsCount: <em>Number</em>,
+                         lastPosted: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">DATE</a></em>,
+                         lastPostLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a> or Null</em>,
+                         lastPostUser: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em> }</li>
+  <li><em>TOPIC</em> = { id: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">TID</a></em>,
+                         selfLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         forumLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         user: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em>,
+                         started: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">DATE</a></em>,
+                         title: <em>String</em>,
+                         postsLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         postsCount: <em>Number</em>,
+                         firstPostLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         lastPostLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                         lastPosted: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">DATE</a></em>,
+                         lastPostUser: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em> }</li>
+  <li><em>POST</em> = { id: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">PID</a></em>,
+                        selfLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                        topicLink: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">URL</a></em>,
+                        user: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">USERNAME</a></em>,
+                        posted: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">DATE</a></em>,
+                        message: <em><a href="http://soft0.upc.edu/dat/prac-forums-spa/forums-api.html#typevars">MARKDOWN</a></em> }</li>
+</ul>
+
+</main><!-- col-md-->
+
+</div><!-- row-->
+</div><!-- container-->
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Jordi Forga, Maig 2026</span>
+  </div>
+</footer>
+
+<!-- Optional JavaScript -->
+<script src="./DAT. Pràctica 5 - forums-api_files/jquery-3.3.1.slim.min.js.download" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="./DAT. Pràctica 5 - forums-api_files/popper.min.js.download" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="./DAT. Pràctica 5 - forums-api_files/bootstrap.min.js.download" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+</body></html>
