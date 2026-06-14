@@ -202,6 +202,114 @@ open the extracted `dat-prj/` folder as the project root and check that
 Browser requests such as `favicon.ico` or `.well-known/...` may appear in the
 terminal. They can be ignored if the application works in the browser.
 
+## Lab 3
+
+These instructions start from the submitted archive `lab3.zip`.
+
+### Requirements
+
+You need `stack` installed.
+
+Check it with:
+
+```sh
+stack --version
+```
+
+The first build may take a few minutes if Stack needs to download GHC or package
+dependencies.
+
+### Extract
+
+Create a new directory for the extracted project and extract `lab3.zip` inside
+it:
+
+```sh
+rm -rf lab3-build
+mkdir lab3-build
+unzip lab3.zip -d lab3-build
+cd lab3-build
+```
+
+If you extract it with Windows Explorer, create a new folder first, for example
+`lab3-build`, and extract `lab3.zip` into that folder. Then open a terminal in
+the folder that contains `README.md`, `stack.yaml`, `wai-intro/`, and
+`web-handler/`.
+
+### Build
+
+Build all Lab 3 executables:
+
+```sh
+stack build
+```
+
+### Run The Game
+
+Run the Lab 3 game application:
+
+```sh
+stack run game
+```
+
+Open:
+
+```text
+http://localhost:4050
+```
+
+Stop the server with `Ctrl+C`.
+
+If port `4050` is busy, use another port:
+
+```powershell
+$env:PORT = "4051"
+stack run game
+```
+
+Then open:
+
+```text
+http://localhost:4051
+```
+
+On Linux or macOS, the equivalent command is:
+
+```sh
+PORT=4051 stack run game
+```
+
+### Quick Test
+
+On the first visit in a new browser session, the page should show:
+
+```text
+Game state: (False,0)
+```
+
+Submit this string in the form:
+
+```text
+*+-++*--*+
+```
+
+The expected result is:
+
+```text
+Game state: (True,3)
+```
+
+The state is stored in a browser cookie. To restart from `(False,0)`, clear the
+cookie for `localhost` or use a private/incognito browser window.
+
+### Other Executable
+
+The supplied `hello-2` example can also be run:
+
+```sh
+stack run hello-2
+```
+
 ## Lab 4
 
 These instructions start from the submitted archive `lab4.zip`.
