@@ -152,7 +152,8 @@ cd forums-frontend
 make browse
 ```
 
-If the default browser command is not available, use Chromium:
+The `browse` target uses `helium-browser` by default. If the VM uses a different
+browser command, override it explicitly:
 
 ```sh
 make browse browser=chromium

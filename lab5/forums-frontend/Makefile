@@ -3,8 +3,7 @@
 
 js_cabal=../js-cabal.nu
 app=forums-frontend
-browser=google-chrome
-#browser=chromium
+browser=helium-browser
 
 help:
 	@echo "Targets: build serve browse dbg-build dbg-repl clean"
